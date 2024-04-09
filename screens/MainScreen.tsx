@@ -10,9 +10,11 @@ import MedicineAlarm from "./components/MedicineAlarm";
 
 const MainScreen = () => {
   // 커스텀 폰트 불러오기
+  // TODO: 폰트들 Context로 전역관리할 것
   const [fontsLoaded] = useFonts({
     NanumSquareNeoHeavy: require("../assets/fonts/NanumSquareNeo-eHv.ttf"),
     NanumSquareNeoRegular: require("../assets/fonts/NanumSquareNeo-bRg.ttf"),
+    NanumSquareNeoLight: require("../assets/fonts/NanumSquareNeo-aLt.ttf"),
   });
 
   // 커스텀 폰트 로드 확인
