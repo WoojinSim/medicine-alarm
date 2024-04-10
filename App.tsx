@@ -2,6 +2,8 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { View, Text } from "react-native";
+import { useFonts } from "expo-font";
 
 // 화면 임포트
 import MainScreen from "./screens/MainScreen";
@@ -12,6 +14,21 @@ import LocationScreen from "./screens/LocationScreen";
 const Tab = createBottomTabNavigator();
 
 const App = () => {
+  const [fontsLoaded] = useFonts({
+    NanumSquareNeoHeavy: require("./assets/fonts/NanumSquareNeo-eHv.ttf"),
+    NanumSquareNeoRegular: require("./assets/fonts/NanumSquareNeo-bRg.ttf"),
+    NanumSquareNeoLight: require("./assets/fonts/NanumSquareNeo-aLt.ttf"),
+  });
+
+  // 커스텀 폰트 로드 확인
+  if (!fontsLoaded) {
+    return (
+      <View>
+        <Text>로딩중 . . .</Text>
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
       <Tab.Navigator

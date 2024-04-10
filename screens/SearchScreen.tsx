@@ -1,24 +1,14 @@
 import React from "react";
-import { View, Text, StatusBar, ScrollView } from "react-native";
-import { useFonts } from "expo-font";
+import { View, Text, ScrollView } from "react-native";
+
+import Header from "./components/Header";
 
 import { generalStyles } from "./styles/generalStyle";
 
 const SearchScreen = () => {
-  const [fontsLoaded] = useFonts({
-    NanumSquareNeoHeavy: require("../assets/fonts/NanumSquareNeo-eHv.ttf"),
-  });
-
-  if (!fontsLoaded) {
-    return <Text>로딩중...</Text>;
-  }
-
   return (
     <View style={generalStyles.wrap}>
-      <StatusBar backgroundColor="#C2C96D" barStyle="light-content" animated={true} />
-      <View style={generalStyles.tabTitleContainer}>
-        <Text style={generalStyles.tabTitleLabel}>상비약 검색</Text>
-      </View>
+      <Header title="상비약 찾기" />
       <ScrollView showsVerticalScrollIndicator={false} style={generalStyles.scrollViewWrap}>
         <View>
           <Text>테스트</Text>

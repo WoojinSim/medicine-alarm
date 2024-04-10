@@ -1,24 +1,14 @@
 import React from "react";
-import { View, Text, StatusBar, ScrollView } from "react-native";
-import { useFonts } from "expo-font";
+import { View, Text, ScrollView } from "react-native";
 
 import { generalStyles } from "./styles/generalStyle";
 
+import Header from "./components/Header";
+
 const LocationScreen = () => {
-  const [fontsLoaded] = useFonts({
-    NanumSquareNeoHeavy: require("../assets/fonts/NanumSquareNeo-eHv.ttf"),
-  });
-
-  if (!fontsLoaded) {
-    return <Text>로딩중...</Text>;
-  }
-
   return (
     <View style={generalStyles.wrap}>
-      <StatusBar backgroundColor="#C2C96D" barStyle="light-content" animated={true} />
-      <View style={generalStyles.tabTitleContainer}>
-        <Text style={generalStyles.tabTitleLabel}>근처 약국</Text>
-      </View>
+      <Header title="근처 약국" />
       <ScrollView showsVerticalScrollIndicator={false} style={generalStyles.scrollViewWrap}>
         <View>
           <Text>테스트</Text>

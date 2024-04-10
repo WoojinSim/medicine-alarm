@@ -1,38 +1,18 @@
 import React from "react";
-import { View, Text, StatusBar, ScrollView } from "react-native";
-import { useFonts } from "expo-font";
+import { View, Text, ScrollView } from "react-native";
 
 import { generalStyles } from "./styles/generalStyle";
 import { mainStyles } from "./styles/mainStyle";
 import { generalValues } from "./styles/generalValues";
 
+import Header from "./components/Header";
 import MedicineAlarm from "./components/MedicineAlarm";
 
 const MainScreen = () => {
-  // 커스텀 폰트 불러오기
-  // TODO: 폰트들 Context로 전역관리할 것
-  const [fontsLoaded] = useFonts({
-    NanumSquareNeoHeavy: require("../assets/fonts/NanumSquareNeo-eHv.ttf"),
-    NanumSquareNeoRegular: require("../assets/fonts/NanumSquareNeo-bRg.ttf"),
-    NanumSquareNeoLight: require("../assets/fonts/NanumSquareNeo-aLt.ttf"),
-  });
-
-  // 커스텀 폰트 로드 확인
-  if (!fontsLoaded) {
-    return (
-      <View>
-        <Text>로딩중 . . .</Text>
-      </View>
-    );
-  }
-
   // 메인 화면
   return (
     <View style={generalStyles.wrap}>
-      <StatusBar backgroundColor="#C2C96D" barStyle="light-content" animated={true} />
-      <View style={generalStyles.tabTitleContainer}>
-        <Text style={generalStyles.tabTitleLabel}>홈</Text>
-      </View>
+      <Header title="홈" />
       <ScrollView showsVerticalScrollIndicator={false} style={generalStyles.scrollViewWrap}>
         <View style={[generalStyles.rowContainer, { marginTop: generalValues.gap }]}>
           <MedicineAlarm />
