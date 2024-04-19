@@ -1,16 +1,16 @@
 import React from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Vibration } from "react-native";
 
 import { generalStyles } from "./styles/generalStyle";
 import { mainStyles } from "./styles/mainStyle";
-import { generalValues } from "./styles/generalValues";
 
 import Header from "./components/Header";
 import MedicineAlarm from "./components/MedicineAlarm";
 
 const MainScreen = ({ navigation }: any) => {
-  const goToNoTabScreen = () => {
-    navigation.navigate("AddPillScheduleScreen");
+  const goToEditPillScheduleScreen = () => {
+    Vibration.vibrate(20);
+    navigation.navigate("EditPillScheduleScreen");
   };
 
   // 메인 화면
@@ -18,11 +18,9 @@ const MainScreen = ({ navigation }: any) => {
     <View style={generalStyles.wrap}>
       <Header title="홈" />
       <ScrollView showsVerticalScrollIndicator={false} style={generalStyles.scrollViewWrap}>
-        <View style={[generalStyles.rowContainer, { marginTop: generalValues.gap }]}>
-          <MedicineAlarm />
-        </View>
+        <MedicineAlarm />
         <View style={generalStyles.rowContainer}>
-          <TouchableOpacity style={mainStyles.gridContainer} onPress={goToNoTabScreen}>
+          <TouchableOpacity style={mainStyles.gridContainer} onPress={goToEditPillScheduleScreen}>
             <Text style={generalStyles.tmpLabel}>Modal Test</Text>
           </TouchableOpacity>
           <View style={mainStyles.gridContainer}>

@@ -12,7 +12,9 @@ import MainScreen from "./screens/MainScreen";
 import FirstaidScreen from "./screens/FirstaidScreen";
 import SearchScreen from "./screens/SearchScreen";
 import LocationScreen from "./screens/LocationScreen";
+import EditPillScheduleScreen from "./screens/EditPillScheduleScreen";
 import AddPillScheduleScreen from "./screens/AddPillScheduleScreen";
+import PillSearchScreen from "./screens/PillSearchScreen";
 
 // 탭(스크린) 분리
 const Tab = createBottomTabNavigator();
@@ -94,12 +96,21 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          ...TransitionPresets.FadeFromBottomAndroid,
           headerShown: false,
         }}
       >
         <Stack.Screen name="Home" component={MainTabNavigator} />
-        <Stack.Screen name="AddPillScheduleScreen" component={AddPillScheduleScreen} />
+        <Stack.Screen
+          name="EditPillScheduleScreen"
+          component={EditPillScheduleScreen}
+          options={TransitionPresets.FadeFromBottomAndroid}
+        />
+        <Stack.Screen
+          name="AddPillScheduleScreen"
+          component={AddPillScheduleScreen}
+          options={TransitionPresets.DefaultTransition}
+        />
+        <Stack.Screen name="PillSearchScreen" component={PillSearchScreen} options={TransitionPresets.DefaultTransition} />
       </Stack.Navigator>
     </NavigationContainer>
   );
