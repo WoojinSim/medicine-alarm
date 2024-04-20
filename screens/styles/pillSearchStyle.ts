@@ -27,6 +27,17 @@ export const pillSearchStyle = StyleSheet.create({
     alignItems: "center",
     marginRight: 8,
   },
+
+  notSearchedContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  notSearchedIcon: {
+    opacity: 0.1,
+    marginBottom: 100,
+  },
+
   alertContainer: {
     justifyContent: "center",
     alignItems: "center",
@@ -36,6 +47,22 @@ export const pillSearchStyle = StyleSheet.create({
     fontFamily: "NanumSquareNeoRegular",
     fontSize: 16,
   },
+
+  loadingImage: {
+    backgroundColor: "#EEE",
+    borderRadius: 10,
+    marginRight: 10,
+    width: 120,
+    height: 65,
+  },
+  loadingItemTitle: {
+    backgroundColor: "#EEE",
+    borderRadius: 10,
+    marginRight: 10,
+    width: 200,
+    height: 30,
+  },
+
   resultScrollContainer: {
     marginRight: generalValues.sidePadding,
     marginLeft: generalValues.sidePadding,

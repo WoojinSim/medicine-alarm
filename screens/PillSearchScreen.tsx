@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StatusBar, ScrollView, TouchableOpacity, TextInput, Vibration, Animated, Image } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Vibration,
+  Animated,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/Feather";
+import PillIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { pillSearchStyle } from "./styles/pillSearchStyle";
 import { generalStyles } from "./styles/generalStyle";
@@ -51,7 +63,7 @@ const PillSearchScreen = ({ navigation }: any) => {
   const [query, setQuery] = useState("");
   const [alert, setAlert] = useState("");
   const [alertColor, setAlertColor] = useState("red");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean | undefined>();
   const [searchData, setSearchData] = useState<pillSearchInterface[]>([]);
 
   // 잘 못 입력했거나 올바르지 오류상황시 애니메이션
@@ -78,6 +90,7 @@ const PillSearchScreen = ({ navigation }: any) => {
     ]).start();
   };
 
+  // 약품 검색
   const fetchData = async (searchText: string) => {
     const apiUrl = "http://apis.data.go.kr/1471000/MdcinGrnIdntfcInfoService01/getMdcinGrnIdntfcInfoList01";
     let queryParams = "?" + encodeURIComponent("serviceKey") + "=" + API_URL; // API키
@@ -94,6 +107,8 @@ const PillSearchScreen = ({ navigation }: any) => {
       setAlert(`총 ${response.data.body.totalCount != null ? response.data.body.totalCount : 0}개 검색됨`);
     } catch (error) {
       setSearchData([]);
+      setAlertColor("red");
+      setAlert(`문제가 발생했습니다.`);
     } finally {
       setIsLoading(false);
     }
@@ -102,19 +117,21 @@ const PillSearchScreen = ({ navigation }: any) => {
   const searchPills = () => {
     const regex: RegExp = /^[a-zA-Z가-힣0-9\s`~!@#$%^&*()\-_=+\\|\[\]{};:'",<.>/?]{2,20}$/;
     Vibration.vibrate(20);
-    setAlertColor("red");
 
     if (query.length < 2) {
+      setAlertColor("red");
       setAlert("검색어는 2글자 이상이어야 합니다.");
       errorAnimation();
       return;
     }
     if (!regex.test(query)) {
+      setAlertColor("red");
       setAlert("올바르지 않은 약 이름입니다.");
       errorAnimation();
       return;
     }
     console.log(`${query}`);
+    setAlert("");
     fetchData(query);
   };
 
@@ -122,6 +139,7 @@ const PillSearchScreen = ({ navigation }: any) => {
     <View style={generalStyles.wrap}>
       <StatusBar backgroundColor={generalValues.containerColor} barStyle="dark-content" animated={true} />
       <HeaderWithBack title="약 검색" />
+
       <Animated.View
         style={[
           pillSearchStyle.searchBoxWrap,
@@ -139,23 +157,39 @@ const PillSearchScreen = ({ navigation }: any) => {
           <Icon name="search" size={30} color={generalValues.highlightColor} />
         </TouchableOpacity>
       </Animated.View>
+
       <View style={pillSearchStyle.alertContainer}>
         <Text style={[pillSearchStyle.alertLabel, { color: alertColor }]}>{alert}</Text>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} style={pillSearchStyle.resultScrollContainer}>
-        {searchData.map((element, idx) => (
-          <TouchableOpacity style={pillSearchStyle.resultItemContainer} key={element.ITEM_SEQ}>
-            <Image
-              source={{ uri: element.ITEM_IMAGE != null ? element.ITEM_IMAGE : "" }}
-              style={[pillSearchStyle.resultImage, { width: 120, height: 65 }]}
-            />
-            <View style={pillSearchStyle.resultLabelWrap}>
-              <Text style={pillSearchStyle.resultItemTitle}>{element.ITEM_NAME}</Text>
-              <Text style={pillSearchStyle.resultItemLore}>{element.CLASS_NAME}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+
+      {(isLoading === undefined || null) && (
+        <View style={pillSearchStyle.notSearchedContainer}>
+          <PillIcon name="pill" size={100} color="black" style={pillSearchStyle.notSearchedIcon} />
+        </View>
+      )}
+
+      {isLoading === true && (
+        <View style={pillSearchStyle.notSearchedContainer}>
+          <ActivityIndicator color={generalValues.highlightColor} size="large" style={{ marginBottom: 140 }}></ActivityIndicator>
+        </View>
+      )}
+
+      {isLoading === false && (
+        <ScrollView showsVerticalScrollIndicator={false} style={pillSearchStyle.resultScrollContainer}>
+          {searchData.map((element, idx) => (
+            <TouchableOpacity style={pillSearchStyle.resultItemContainer} key={element.ITEM_SEQ}>
+              <Image
+                source={{ uri: element.ITEM_IMAGE != null ? element.ITEM_IMAGE : "" }}
+                style={[pillSearchStyle.resultImage, { width: 120, height: 65 }]}
+              />
+              <View style={pillSearchStyle.resultLabelWrap}>
+                <Text style={pillSearchStyle.resultItemTitle}>{element.ITEM_NAME}</Text>
+                <Text style={pillSearchStyle.resultItemLore}>{element.CLASS_NAME}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 };
