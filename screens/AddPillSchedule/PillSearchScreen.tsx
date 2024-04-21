@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -13,15 +13,14 @@ import {
 } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/Feather";
 import PillIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { pillSearchStyle } from "./styles/pillSearchStyle";
-import { generalStyles } from "./styles/generalStyle";
-import { generalValues } from "./styles/generalValues";
+import { pillSearchStyle } from "../styles/pillSearchStyle";
+import { generalStyles } from "../styles/generalStyle";
+import { generalValues } from "../styles/generalValues";
 
-import HeaderWithBack from "./components/HeaderWithBack";
+import HeaderWithBack from "../components/HeaderWithBack";
 
 interface pillSearchInterface {
   ITEM_SEQ: string;
@@ -56,15 +55,14 @@ interface pillSearchInterface {
   MARK_CODE_BACK: string | null;
   EDI_CODE: string | null;
   BIZRNO: string;
-  // 다른 필드가 있다면 여기에 추가합니다.
 }
 
 const PillSearchScreen = ({ navigation }: any) => {
-  const [query, setQuery] = useState("");
-  const [alert, setAlert] = useState("");
-  const [alertColor, setAlertColor] = useState("red");
-  const [isLoading, setIsLoading] = useState<boolean | undefined>();
-  const [searchData, setSearchData] = useState<pillSearchInterface[]>([]);
+  const [query, setQuery] = useState(""); // 검색어 State
+  const [alert, setAlert] = useState(""); // 검색창 아래 안내 문자 State
+  const [alertColor, setAlertColor] = useState("red"); // 검색창 아래 안내문자 색상 State
+  const [isLoading, setIsLoading] = useState<boolean | undefined>(); // 검색결과 로딩상태 State
+  const [searchData, setSearchData] = useState<pillSearchInterface[]>([]); // 검색결과 State
 
   // 잘 못 입력했거나 올바르지 오류상황시 애니메이션
   const [shakeTranslate] = useState(new Animated.Value(0));
@@ -90,7 +88,10 @@ const PillSearchScreen = ({ navigation }: any) => {
     ]).start();
   };
 
-  // 약품 검색
+  /**
+   * 검색 API Fetch
+   * @param searchText 검색어 쿼리
+   */
   const fetchData = async (searchText: string) => {
     const apiUrl = "http://apis.data.go.kr/1471000/MdcinGrnIdntfcInfoService01/getMdcinGrnIdntfcInfoList01";
     let queryParams = "?" + encodeURIComponent("serviceKey") + "=" + API_URL; // API키
@@ -98,7 +99,6 @@ const PillSearchScreen = ({ navigation }: any) => {
     queryParams += "&" + encodeURIComponent("pageNo") + "=" + encodeURIComponent("1"); /**/
     queryParams += "&" + encodeURIComponent("numOfRows") + "=" + encodeURIComponent("200"); /**/
     queryParams += "&" + encodeURIComponent("type") + "=" + encodeURIComponent("json"); /**/
-
     setIsLoading(true);
     try {
       const response = await axios.get(`${apiUrl}${queryParams}`);
@@ -108,16 +108,19 @@ const PillSearchScreen = ({ navigation }: any) => {
     } catch (error) {
       setSearchData([]);
       setAlertColor("red");
-      setAlert(`문제가 발생했습니다.`);
+      setAlert(`인터넷 연결을 확인해주세요.`);
     } finally {
       setIsLoading(false);
     }
   };
 
+  /**
+   * 입력된 쿼리 확인 후 검색 수행 함수
+   * @returns void
+   */
   const searchPills = () => {
     const regex: RegExp = /^[a-zA-Z가-힣0-9\s`~!@#$%^&*()\-_=+\\|\[\]{};:'",<.>/?]{2,20}$/;
     Vibration.vibrate(20);
-
     if (query.length < 2) {
       setAlertColor("red");
       setAlert("검색어는 2글자 이상이어야 합니다.");
@@ -133,6 +136,11 @@ const PillSearchScreen = ({ navigation }: any) => {
     console.log(`${query}`);
     setAlert("");
     fetchData(query);
+  };
+
+  const goToPDetailInputScreen = (imageURL: string | null, pillSEQ: string, pillName: string, pillLore: string) => {
+    Vibration.vibrate(20);
+    navigation.navigate("DetailInputScreen", { imageURL: imageURL, pillSEQ: pillSEQ, pillName: pillName, pillLore: pillLore });
   };
 
   return (
@@ -170,14 +178,20 @@ const PillSearchScreen = ({ navigation }: any) => {
 
       {isLoading === true && (
         <View style={pillSearchStyle.notSearchedContainer}>
-          <ActivityIndicator color={generalValues.highlightColor} size="large" style={{ marginBottom: 140 }}></ActivityIndicator>
+          <ActivityIndicator color={generalValues.highlightColor} size="large" style={{ marginBottom: 140 }} />
         </View>
       )}
 
       {isLoading === false && (
         <ScrollView showsVerticalScrollIndicator={false} style={pillSearchStyle.resultScrollContainer}>
           {searchData.map((element, idx) => (
-            <TouchableOpacity style={pillSearchStyle.resultItemContainer} key={element.ITEM_SEQ}>
+            <TouchableOpacity
+              style={pillSearchStyle.resultItemContainer}
+              key={element.ITEM_SEQ}
+              onPress={() => {
+                goToPDetailInputScreen(element.ITEM_IMAGE, element.ITEM_SEQ, element.ITEM_NAME, element.CLASS_NAME);
+              }}
+            >
               <Image
                 source={{ uri: element.ITEM_IMAGE != null ? element.ITEM_IMAGE : "" }}
                 style={[pillSearchStyle.resultImage, { width: 120, height: 65 }]}

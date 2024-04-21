@@ -13,8 +13,9 @@ import FirstaidScreen from "./screens/FirstaidScreen";
 import SearchScreen from "./screens/SearchScreen";
 import LocationScreen from "./screens/LocationScreen";
 import EditPillScheduleScreen from "./screens/EditPillScheduleScreen";
-import AddPillScheduleScreen from "./screens/AddPillScheduleScreen";
-import PillSearchScreen from "./screens/PillSearchScreen";
+import AddPillScheduleScreen from "./screens/AddPillSchedule/AddPillScheduleScreen";
+import PillSearchScreen from "./screens/AddPillSchedule/PillSearchScreen";
+import DetailInputScreen from "./screens/AddPillSchedule/DetailInputScreen";
 
 // 탭(스크린) 분리
 const Tab = createBottomTabNavigator();
@@ -111,6 +112,7 @@ const App = () => {
           options={TransitionPresets.DefaultTransition}
         />
         <Stack.Screen name="PillSearchScreen" component={PillSearchScreen} options={TransitionPresets.DefaultTransition} />
+        <Stack.Screen name="DetailInputScreen" component={DetailInputScreen} options={TransitionPresets.DefaultTransition} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -3,11 +3,11 @@ import { View, Text, StatusBar, ScrollView, TouchableOpacity, Vibration } from "
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-import { addPillScheduleStyle } from "./styles/addPillScheduleStyle";
-import { generalStyles } from "./styles/generalStyle";
-import { generalValues } from "./styles/generalValues";
+import { addPillScheduleStyle } from "../styles/addPillScheduleStyle";
+import { generalStyles } from "../styles/generalStyle";
+import { generalValues } from "../styles/generalValues";
 
-import HeaderWithBack from "./components/HeaderWithBack";
+import HeaderWithBack from "../components/HeaderWithBack";
 
 const AddPillScheduleScreen = ({ navigation }: any) => {
   const goToPillSearchScreen = () => {
