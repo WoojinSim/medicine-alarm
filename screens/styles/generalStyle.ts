@@ -2,9 +2,20 @@ import { StyleSheet } from "react-native";
 import { generalValues } from "./generalValues";
 
 export const generalStyles = StyleSheet.create({
+  startLoadingContainer: {
+    flex: 1,
+    backgroundColor: generalValues.highlightColor,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  startLoadingTitle: {
+    fontSize: 40,
+    color: "white",
+  },
   wrap: {
     flex: 1,
     overflow: "scroll",
+    position: "relative",
   },
   tabTitleContainer: {
     height: 50,

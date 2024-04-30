@@ -4,4 +4,5 @@ export const generalValues = {
   sidePadding: 20, // 스크롤뷰 양옆 padding
   containerColor: "#F3F4F6",
   highlightColor: "#C2C96D",
+  highlightColorLight: "#E6E8C7",
 };

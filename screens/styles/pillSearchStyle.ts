@@ -68,7 +68,6 @@ export const pillSearchStyle = StyleSheet.create({
     marginLeft: generalValues.sidePadding,
   },
   resultItemContainer: {
-    flex: 1,
     padding: 10,
     marginBottom: 10,
     backgroundColor: "white",

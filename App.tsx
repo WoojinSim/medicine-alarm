@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native"; // 하단 네비
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; // 하단 네비게이션 바 생성
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"; // 네비게이션 바 외의 스크린 전환
 import Icon from "react-native-vector-icons/MaterialIcons"; // 하단 네비게이션 바 아이콘
-import { View, Text } from "react-native"; // 리액트 네이티브
+import { View, Text, StatusBar } from "react-native"; // 리액트 네이티브
 import { useFonts } from "expo-font"; // 외부 글꼴 사용
 
 // 화면 임포트
@@ -16,6 +16,9 @@ import EditPillScheduleScreen from "./screens/EditPillScheduleScreen";
 import AddPillScheduleScreen from "./screens/AddPillSchedule/AddPillScheduleScreen";
 import PillSearchScreen from "./screens/AddPillSchedule/PillSearchScreen";
 import DetailInputScreen from "./screens/AddPillSchedule/DetailInputScreen";
+
+import { generalStyles } from "./screens/styles/generalStyle";
+import { generalValues } from "./screens/styles/generalValues";
 
 // 탭(스크린) 분리
 const Tab = createBottomTabNavigator();
@@ -87,8 +90,11 @@ const App = () => {
   // 커스텀 폰트 로드 확인
   if (!fontsLoaded) {
     return (
-      <View>
-        <Text>로딩중 . . .</Text>
+      <View style={generalStyles.wrap}>
+        <StatusBar backgroundColor={generalValues.highlightColor} barStyle="light-content" animated={true} />
+        <View style={generalStyles.startLoadingContainer}>
+          <Text style={generalStyles.startLoadingTitle}>약속</Text>
+        </View>
       </View>
     );
   }
