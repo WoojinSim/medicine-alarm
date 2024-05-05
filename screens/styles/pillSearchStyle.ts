@@ -27,17 +27,33 @@ export const pillSearchStyle = StyleSheet.create({
     alignItems: "center",
     marginRight: 8,
   },
-
-  notSearchedContainer: {
-    flex: 1,
+  showAutoCompleteContainer: {
+    margin: 10,
+    marginBottom: 0,
+    flexDirection: "column",
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: generalValues.highlightColor,
+    backgroundColor: "white",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
   },
-  notSearchedIcon: {
-    opacity: 0.1,
-    marginBottom: 100,
+  hideAutoCompleteContainer: {
+    display: 'none',
+    height: 0,
+    width: 0,
+    margin: 0,
+    marginBottom: 0,
+    borderRadius: 0,
+    borderWidth: 0,
+    overflow: "hidden",
   },
-
+  autoCompleteData: {
+    padding: 15,
+    height: 50,
+    fontSize: 40,
+    zIndex: 2,
+  },
   alertContainer: {
     justifyContent: "center",
     alignItems: "center",
@@ -47,27 +63,12 @@ export const pillSearchStyle = StyleSheet.create({
     fontFamily: "NanumSquareNeoRegular",
     fontSize: 16,
   },
-
-  loadingImage: {
-    backgroundColor: "#EEE",
-    borderRadius: 10,
-    marginRight: 10,
-    width: 120,
-    height: 65,
-  },
-  loadingItemTitle: {
-    backgroundColor: "#EEE",
-    borderRadius: 10,
-    marginRight: 10,
-    width: 200,
-    height: 30,
-  },
-
   resultScrollContainer: {
     marginRight: generalValues.sidePadding,
     marginLeft: generalValues.sidePadding,
   },
   resultItemContainer: {
+    flex: 1,
     padding: 10,
     marginBottom: 10,
     backgroundColor: "white",
