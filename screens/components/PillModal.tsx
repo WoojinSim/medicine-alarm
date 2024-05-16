@@ -42,7 +42,7 @@ const PillModal = ({ showModal, setShowModal, pillItem }) => {
     const pressBookmarkButton = async() => {
         loadData();
         setIsBookmarked(!isBookmarked);
-        isBookmarked ? storeData(pillItem) : removeData(pillItem);
+        !isBookmarked ? storeData(pillItem) : removeData(pillItem);
         console.log("버튼 눌림");
     };
 
@@ -84,7 +84,7 @@ const PillModal = ({ showModal, setShowModal, pillItem }) => {
                         onRequestClose={() => {
                             setShowModal(!showModal);
                         }}>
-                        <ScrollView contentContainerStyle={pillModalStyle.modal}>
+                        <ScrollView contentContainerStyle={pillModalStyle.modal}> 
                             <View style={pillModalStyle.buttonContainer}>
                                 <TouchableOpacity style={pillModalStyle.bookmarkButton} onPress={pressBookmarkButton}>
                                     {isBookmarked ? 
