@@ -14,7 +14,6 @@ import { ScrollView } from "react-native-gesture-handler";
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
-
 interface pillSearchInterface { // api 다른 거 사용하면서 좀 수정했음
     resultCode: number; // 결과 코드
     resultMsg: string; // 결과 메시지
@@ -38,12 +37,26 @@ interface pillSearchInterface { // api 다른 거 사용하면서 좀 수정했�
 
 const PillModal = ({ showModal, setShowModal, pillItem }) => {
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const [imgPressed, setImgPressed] = useState(false);
+    const [imgWidth, setImgWidth] = useState(240);
+    const [imgHeight, setImgHeight] = useState(130);
 
     const pressBookmarkButton = async() => {
-        loadData();
         setIsBookmarked(!isBookmarked);
         !isBookmarked ? storeData(pillItem) : removeData(pillItem);
         console.log("버튼 눌림");
+    };
+
+    const pressImage = async() => {
+        setImgPressed(!imgPressed);
+        if (imgPressed) {
+            setImgWidth(480);
+            setImgHeight(260);
+        }
+        else {
+            setImgWidth(240);
+            setImgHeight(130);
+        }
     };
 
     const loadData = async() => {
@@ -96,10 +109,13 @@ const PillModal = ({ showModal, setShowModal, pillItem }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                                <Image
-                                source={{ uri: pillItem.itemImage != null ? pillItem.itemImage : "" }}
-                                style={[pillModalStyle.itemImage, { width: 240, height: 130 }]}
-                                />
+                                <TouchableOpacity onPress={pressImage}>
+                                    <Image
+                                    source={{ uri: pillItem.itemImage != null ? pillItem.itemImage : "" }}
+                                    style={[pillModalStyle.itemImage, { width: imgWidth, height: imgHeight }]}
+                                    />
+                                </TouchableOpacity>
+                                <Text style={{ color: "gray", fontSize: 15 }}>이미지 클릭 시 확대</Text>
                             </View>
                             <View style={pillModalStyle.itemContainer}>
                                 <Text style={pillModalStyle.itemName}>{pillItem.itemName}</Text>
