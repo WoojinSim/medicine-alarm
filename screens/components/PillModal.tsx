@@ -37,9 +37,8 @@ interface pillSearchInterface { // api 다른 거 사용하면서 좀 수정했�
 
 const PillModal = ({ showModal, setShowModal, pillItem }) => {
     const [isBookmarked, setIsBookmarked] = useState(false);
-    const [imgPressed, setImgPressed] = useState(false);
     const [imgWidth, setImgWidth] = useState(240);
-    const [imgHeight, setImgHeight] = useState(130);
+    const [imgHeight, setImgHeight] = useState(140);
 
     const pressBookmarkButton = async() => {
         setIsBookmarked(!isBookmarked);
@@ -47,15 +46,17 @@ const PillModal = ({ showModal, setShowModal, pillItem }) => {
         console.log("버튼 눌림");
     };
 
-    const pressImage = async() => {
-        setImgPressed(!imgPressed);
-        if (imgPressed) {
-            setImgWidth(480);
-            setImgHeight(260);
+    const pressPlusButton = async() => {
+        if (imgWidth < 480 && imgHeight < 260) {
+            setImgWidth(imgWidth+48);
+            setImgHeight(imgHeight+28);
         }
-        else {
-            setImgWidth(240);
-            setImgHeight(130);
+    };
+
+    const pressMinusButton = async() => {
+        if (imgWidth > 120 && imgHeight > 70) {
+            setImgWidth(imgWidth-48);
+            setImgHeight(imgHeight-28);
         }
     };
 
@@ -108,14 +109,19 @@ const PillModal = ({ showModal, setShowModal, pillItem }) => {
                                     <Icon name="x" size={30} color={generalValues.highlightColor} />
                                 </TouchableOpacity>
                             </View>
+                            <View style={[pillModalStyle.buttonContainer, {alignItems: "center", justifyContent: "center" }]}>
+                                    <TouchableOpacity onPress={pressPlusButton}>
+                                        <Icon name="plus-square" size={30}/>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={pressMinusButton}>
+                                        <Icon name="minus-square" size={30}/>
+                                    </TouchableOpacity>
+                            </View>
                             <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                                <TouchableOpacity onPress={pressImage}>
-                                    <Image
-                                    source={{ uri: pillItem.itemImage != null ? pillItem.itemImage : "" }}
-                                    style={[pillModalStyle.itemImage, { width: imgWidth, height: imgHeight }]}
-                                    />
-                                </TouchableOpacity>
-                                <Text style={{ color: "gray", fontSize: 15 }}>이미지 클릭 시 확대</Text>
+                                <Image
+                                source={{ uri: pillItem.itemImage != null ? pillItem.itemImage : "" }}
+                                style={[pillModalStyle.itemImage, { width: imgWidth, height: imgHeight }]}
+                                />
                             </View>
                             <View style={pillModalStyle.itemContainer}>
                                 <Text style={pillModalStyle.itemName}>{pillItem.itemName}</Text>
