@@ -197,7 +197,7 @@ const PillSearchScreen = () => {
           <Icon name="search" size={30} color={generalValues.highlightColor} />
         </TouchableOpacity>
       </Animated.View>
-      {showAutoComplete ? // showAutoComplete 자체 문제는 아닌듯 렉인가?? 내일 회의하면서 상의
+      {showAutoComplete ? // showAutoComplete 자체 문제는 아닌듯 렉인가?? 내일 회의하면서 상의 + 아직 뭐가 원인인지 모르겟다
         <FlatList
           contentContainerStyle={showAutoComplete ? pillSearchStyle.showAutoCompleteContainer : null}
           data={autoCompleteData}
