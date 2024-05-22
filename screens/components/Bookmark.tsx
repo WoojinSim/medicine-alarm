@@ -22,8 +22,21 @@ interface pillSearchInterface { // api 다른 거 사용하면서 좀 수정했�
     itemImage: string; // 낱알이미지
 }
 
+// 코드 보니까 키 중복이 안되서 걍 favorites_pill 키값으로 넘겨주고 value는 Json 리스트 형식으로 바꿔야할듯
+// 일단 bookmark 먼저 수정하고 불러오는 형식도 수정
+
+const loadData = async () => {
+    const favs = await AsyncStorage.getItem("favorites_pill");
+    if (favs)
+        return JSON.parse(favs);
+    else
+        return null;
+};
+
 const storeData = async (pillItem: pillSearchInterface) => {
     try {
+        const favs = loadData();
+        
         await AsyncStorage.setItem(pillItem.itemSeq.toString(), pillItem.itemName);
         console.log("Bookmark Stored");
     } catch (error) {
