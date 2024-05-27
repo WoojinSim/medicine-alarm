@@ -38,8 +38,9 @@ const loadData = async () => {
 const storeData = async (pillItem: pillSearchInterface) => {
     try {
         const favs = loadData();
-        const newFavs = {...favs};
-        newFavs.{$pillItem.itemSeq} = true;
+        let newFavs = {...favs};
+        let seq = pillItem.itemSeq;
+        newFavs[seq] = true;
         const newFavass = {...favs, ...{id : true}};
 
         await AsyncStorage.setItem("favorites_pill", JSON.stringify(newFavs));
