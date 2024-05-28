@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Modal, View, Text, TouchableOpacity, Image, Pressable, Dimensions } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Modal, View, Text, TouchableOpacity, Image, Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 
 import {storeData, retrieveData, removeData} from "../components/Bookmark";
 
-import { pillSearchStyle } from "../styles/pillSearchStyle";
-import { generalStyles } from "../styles/generalStyle";
 import { generalValues } from "../styles/generalValues";
 import { pillModalStyle } from "../styles/pillModalStyle";
 import { ScrollView } from "react-native-gesture-handler";
@@ -14,38 +11,19 @@ import { ScrollView } from "react-native-gesture-handler";
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
-interface pillSearchInterface { // api 다른 거 사용하면서 좀 수정했음
-    resultCode: number; // 결과 코드
-    resultMsg: string; // 결과 메시지
-    numOfRows: number; // 한 페이지 결과 수
-    pageNo: number; // 페이지 번호
-    totalCount: number; // 전체 결과 수
-    entpName: string; // 업체명
-    itemName: string; // 제품명
-    itemSeq: number; // 품목기준코드
-    efcyQesitm: string; // 문항1(효능)
-    useMethodQesitm: string; // 문항2(사용법)
-    atpnWarnQesitm: string; // 문항3(주의사항 경고)
-    atpnQesitm: string; // 문항4(주의사항)
-    intrcQesitm: string; // 문항5(상호작용)
-    seQesitm: string; // 문항6(부작용)
-    depositMethodQesitm: string; // 문항7(보관법)
-    openDe: number; // 공개일자
-    updateDe: number; // 수정일자
-    itemImage: string; // 낱알이미지
-}
-
 const PillModal = ({ showModal, setShowModal, pillItem }) => {
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [imgWidth, setImgWidth] = useState(240);
     const [imgHeight, setImgHeight] = useState(140);
 
+    // 북마크 버튼 누를 시 데이터 저장 or 삭제
     const pressBookmarkButton = async() => {
-        setIsBookmarked(!isBookmarked);
         !isBookmarked ? storeData(pillItem) : removeData(pillItem);
-        console.log("버튼 눌림");
+        setIsBookmarked(!isBookmarked);
+        console.log("Bookmark button pressed");
     };
 
+    // + 버튼 누를 시 이미지 크기 확대
     const pressPlusButton = async() => {
         if (imgWidth < 480 && imgHeight < 260) {
             setImgWidth(imgWidth+48);
@@ -53,6 +31,7 @@ const PillModal = ({ showModal, setShowModal, pillItem }) => {
         }
     };
 
+    // - 버튼 누를 시 이미지 크기 축소
     const pressMinusButton = async() => {
         if (imgWidth > 120 && imgHeight > 70) {
             setImgWidth(imgWidth-48);
@@ -60,15 +39,13 @@ const PillModal = ({ showModal, setShowModal, pillItem }) => {
         }
     };
 
+    // 저장소에 존재하는 데이터 확인
     const loadData = async() => {
-        const value = await retrieveData(pillItem);
-        if (value !== null) {
+        const exists = await retrieveData(pillItem);
+        if (exists !== false) {
             setIsBookmarked(true);
-            console.log(value);
-            console.log("저장소에 존재");
         } else {
             setIsBookmarked(false);
-            console.log("저장소에 없음");
         }
     };
 

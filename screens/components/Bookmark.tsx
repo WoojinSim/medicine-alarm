@@ -1,7 +1,6 @@
-import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-interface pillSearchInterface { // api 다른 거 사용하면서 좀 수정했음
+interface pillSearchInterface { 
     resultCode: number; // 결과 코드
     resultMsg: string; // 결과 메시지
     numOfRows: number; // 한 페이지 결과 수
@@ -22,47 +21,63 @@ interface pillSearchInterface { // api 다른 거 사용하면서 좀 수정했�
     itemImage: string; // 낱알이미지
 }
 
-// 코드 보니까 키 중복이 안되서 걍 favorites_pill 키값으로 넘겨주고 value는 Json 리스트 형식으로 바꿔야할듯
-// 일단 bookmark 먼저 수정하고 불러오는 형식도 수정
+// 즐겨찾기 목록은 JSON 형식으로 저장, Array 형식으로 사용됨
+// favlist = [itemSeq1, itemSeq2, ...];
 
-// 약 즐겨찾기 JSON 목록 반환
+// favlist 반환
 const loadData = async () => { 
-    const favs = await AsyncStorage.getItem("favorites_pill");
-    console.log(favs);
-    if (favs)
-        return JSON.parse(favs);
-    else
-        return null;
+    try {
+        let favs = await AsyncStorage.getItem("favorites_pill");
+        if (favs == null)
+            favs = [];
+        else
+            favs = JSON.parse(favs);
+        return favs;
+    } catch (e) {
+        throw e;
+    }
 };
 
+// 입력받은 pillItem 저장
 const storeData = async (pillItem: pillSearchInterface) => {
     try {
-        const favs = loadData();
-        let newFavs = {...favs};
-        let seq = pillItem.itemSeq;
-        newFavs[seq] = true;
-        const newFavass = {...favs, ...{id : true}};
+        let favs = await loadData();
+        let newFavs = favs.concat(pillItem.itemSeq);
 
         await AsyncStorage.setItem("favorites_pill", JSON.stringify(newFavs));
         console.log("Bookmark Stored");
-        console.log(JSON.stringify(newFavs));
     } catch (error) {
         console.log(error);
     }
 };
 
+// 입력받은 pillItem이 존재한다면 true, 아니라면 false 반환
 const retrieveData = async (pillItem: pillSearchInterface) => {
     try {
-        const value = await AsyncStorage.getItem(pillItem.itemSeq.toString());
-        return value;
+        let favs = await loadData();
+        
+        if (favs.length != 0) {
+            if (favs.find(function(data){ return data == pillItem.itemSeq}) != undefined)
+                return true;
+            else
+                return false;
+        }
+        else
+            return false;
+
     } catch (error) {
         console.log(error);
     }
 };
 
+// 입력받은 pillItem을 저장소에서 삭제
 const removeData = async (pillItem: pillSearchInterface) => {
     try {
-        const result = await AsyncStorage.removeItem(pillItem.itemSeq.toString());
+        let favs = await loadData();
+        const idx = favs.indexOf(pillItem.itemSeq);
+        favs.splice(idx, 1);
+
+        await AsyncStorage.setItem("favorites_pill", JSON.stringify(favs));
         console.log("Bookmark Removed");
     } catch (error) {
         console.log(error);
