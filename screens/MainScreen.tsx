@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, ScrollView, TouchableOpacity, Vibration } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { generalStyles } from "./styles/generalStyle";
 import { mainStyles } from "./styles/mainStyle";

@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import IconAntDesign from "react-native-vector-icons/AntDesign";
 import IconMaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Toast from "react-native-toast-message";
+import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { useRoute } from "@react-navigation/native";
 
 import { pillSearchStyle } from "../styles/pillSearchStyle";
@@ -24,24 +25,42 @@ import { generalValues } from "../styles/generalValues";
 
 import HeaderWithBack from "../components/HeaderWithBack";
 
+/** Pill Search 스크린에서부터 라우트로 넘겨받는 데이터 인터페이스 */
 interface pillDataInterface {
   imageURL: string | null;
   pillSEQ: string;
   pillName: string;
   pillLore: string;
 }
-type TIME_TYPE = "AFTER_WAKING_UP" | "AFTER_BREAKFAST" | "AFTER_LUNCH" | "AFTER_DINNER" | "BEFORE_BED" | "ANYTIME";
-interface pillScheduleDetailInterface {
+/** 시간대 별 코드 타입  */
+export type TIME_TYPE = "AFTER_WAKING_UP" | "AFTER_BREAKFAST" | "AFTER_LUNCH" | "AFTER_DINNER" | "BEFORE_BED" | "ANYTIME";
+/** 알람 저장 인터페이스 */
+export interface pillScheduleDetailInterface {
+  /** 약 사진 */
+  MEDICINE_IMAGE: string;
+  /** 약 이름 */
+  MEDICINE_NAME: string;
+  /** 약 설명 */
+  MEDICINE_CLASS_NAME: string | null;
+  /** 복약 주기 (일 수) */
   MEDICINE_INTERVALS: number | null;
-  MEDICINE_TIME_ZONE: TIME_TYPE[] | null;
+  /** 복약 시간 */
+  MEDICINE_TIME_ZONE: TIME_TYPE[];
+  /** 상세 복약 시간 TODO: 추후 판단 후 삭제 예정 */
   MEDICINE_TIME: string[] | null;
+  /** 복약 갯수 */
   NUMBER_OF_PILLS: number | null;
+  /** 복약 시작 날짜 */
   START_DATE: Date | null;
+  /** 복약 종료 날짜 */
   END_DATE: Date | null;
+  /** 총 복약 일 수 (TODO: 추후 판단 후 삭제 예정) */
   TOTAL_DAYS: number | null;
 }
+/** 알람이 저장될 때 사용될 Json 겸 Object 인터페이스 타입 */
+export type storeObjectType = Record<TIME_TYPE, pillScheduleDetailInterface[]>;
 
-const MAX_INPUT_STAGE = 5; // !!! 내용 추가시 꼭 수정할것 !!!
+const MAX_INPUT_STAGE = 5; // TODO: !!! 내용 추가시 꼭 수정할것 !!!
 
 const StageIndicator = (MAX_STAGE: number, CURRENT_STAGE: number) => {
   return (
@@ -57,13 +76,19 @@ const StageIndicator = (MAX_STAGE: number, CURRENT_STAGE: number) => {
 };
 
 const DetailInputScreen = ({ navigation }: any) => {
+  const route = useRoute(); // 라우트 선언
+  const selectedPillData = route.params as pillDataInterface; // 선택한 약 가져오기
+
   const [inputStage, setInputStage] = useState(0); // 현재 입력창 단계
   const [outerScrollViewWidth, setOuterScrollViewWidth] = useState(0); // 입력창 Wrap Width 값
   const [selectedItems, setSelectedItems] = useState<boolean[]>([]); // 입력창 내 선택 항목 선택 여부 boolean 배열
   const [inputtedDetailInfo, setInputtedDetailInfo] = useState<pillScheduleDetailInterface>({
     // 복약 세부정보 Object
+    MEDICINE_IMAGE: selectedPillData.imageURL != null ? selectedPillData.imageURL : "",
+    MEDICINE_NAME: selectedPillData.pillName,
+    MEDICINE_CLASS_NAME: selectedPillData.pillLore,
     MEDICINE_INTERVALS: null,
-    MEDICINE_TIME_ZONE: null,
+    MEDICINE_TIME_ZONE: ["ANYTIME"],
     MEDICINE_TIME: null,
     NUMBER_OF_PILLS: null,
     START_DATE: null,
@@ -71,10 +96,10 @@ const DetailInputScreen = ({ navigation }: any) => {
     TOTAL_DAYS: null,
   });
   const [query, setQuery] = useState(""); // 세부정보 사용자 입력 저장
+  const [isDateModalOpen, setIsDateModalOpen] = useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  const route = useRoute();
   const scrollViewRef = useRef<ScrollView>(null);
-  const selectedPillData = route.params as pillDataInterface; // 선택한 약 가져오기
 
   // 잘 못 입력했거나 올바르지 오류상황시 애니메이션
   const [shakeTranslate] = useState(new Animated.Value(0));
@@ -101,8 +126,16 @@ const DetailInputScreen = ({ navigation }: any) => {
   };
 
   /**
+   * 대충 복약계획 목록 스크린으로 이동하는 함수
+   */
+  const goToEditPillScheduleScreen = () => {
+    Vibration.vibrate(20);
+    navigation.navigate("EditPillScheduleScreen");
+  };
+
+  /**
    * 스테이지 최상위 컴포넌트 Width 값 추적 후 입력단계 페이지 넓이 설정
-   * @param event LayoutCHangeEvent
+   * @param event LayoutChangeEvent
    */
   const layOutRefresh = (event: LayoutChangeEvent) => {
     const { width } = event.nativeEvent.layout;
@@ -117,10 +150,50 @@ const DetailInputScreen = ({ navigation }: any) => {
    * @returns boolean
    */
   const correctNumber = (textNum: string, MIN: number, MAX: number): boolean => {
-    if (!/^\d+$/.test(textNum)) return false;
+    if (!/^\d+$/.test(textNum)) return false; // 정수인지 확인
     const number = parseInt(textNum);
-    if (number < MIN || number > MAX) return false;
+    if (number < MIN || number > MAX) return false; // 범위 확인
     return true;
+  };
+
+  /**
+   * Date 객체 던져주면 "****년 **월 **일" 포멧으로 반환
+   * @param date
+   * @returns "****년 **월 **일"
+   */
+  const formatKoreanDate = (date: Date): string => {
+    if (!(date instanceof Date)) return "";
+    const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
+    return new Intl.DateTimeFormat("ko-KR", options).format(date);
+  };
+
+  /**
+   * 입력된 값들 AsyncStorage에 저장(누적)
+   * @param value pillScheduleDetailInterface 인터페이스 Object 만 받음
+   */
+  const storeData = async (value: pillScheduleDetailInterface) => {
+    const initDataArray: storeObjectType = {
+      AFTER_WAKING_UP: [],
+      AFTER_BREAKFAST: [],
+      AFTER_LUNCH: [],
+      AFTER_DINNER: [],
+      BEFORE_BED: [],
+      ANYTIME: [],
+    };
+
+    try {
+      const existingData = await AsyncStorage.getItem("@PillSchedule"); // 기존 데이터를 불러옮
+      const dataArray: storeObjectType = existingData ? JSON.parse(existingData) : initDataArray; // 데이터가 쌓일 배열을 생성 (초기화)
+      value.MEDICINE_TIME_ZONE.map((element) => {
+        // 시간대 별로 분류해서 같은 내용 저장
+        dataArray[element].push(value); // 데이터 쌓기
+      });
+      await AsyncStorage.setItem("@PillSchedule", JSON.stringify(dataArray)); // 저장
+      goToEditPillScheduleScreen();
+    } catch (e) {
+      // 저장 오류 처리
+      console.error(e);
+    }
   };
 
   /**
@@ -128,16 +201,12 @@ const DetailInputScreen = ({ navigation }: any) => {
    * @returns void
    */
   const nextStage = (): void => {
-    if (inputStage >= MAX_INPUT_STAGE - 1) {
-      console.log("모든 스테이지 완료"); // TODO: 이후 다음 Screen 넘어가는 코드 작성
-      return;
-    }
-
     Vibration.vibrate(20);
     let prevData = inputtedDetailInfo;
 
     switch (inputStage) {
       case 0:
+        // 복약 주기
         let MEDICINE_INTERVALS = 1;
         if (!selectedItems[0] && !selectedItems[1]) {
           errorAnimation();
@@ -154,6 +223,7 @@ const DetailInputScreen = ({ navigation }: any) => {
         break;
 
       case 1:
+        // 복약 시간
         let allFalseCheck = false;
         let resultArray: TIME_TYPE[] = [];
         selectedItems.map((element, idx) => {
@@ -176,6 +246,7 @@ const DetailInputScreen = ({ navigation }: any) => {
         break;
 
       case 2:
+        // 복약 갯수
         if (!correctNumber(query, 1, 10)) {
           errorAnimation();
           return;
@@ -183,6 +254,30 @@ const DetailInputScreen = ({ navigation }: any) => {
         prevData = { ...prevData, NUMBER_OF_PILLS: parseInt(query) };
         setInputtedDetailInfo(prevData);
         break;
+
+      case 3:
+        // 시작 날짜
+        prevData = { ...prevData, START_DATE: selectedDate };
+        setInputtedDetailInfo(prevData);
+        setIsDateModalOpen(false);
+        break;
+
+      case 4:
+        // 종료 날짜
+        if (!inputtedDetailInfo.START_DATE) return;
+        if (inputtedDetailInfo.START_DATE > selectedDate) {
+          errorAnimation();
+          return;
+        }
+        prevData = { ...prevData, END_DATE: selectedDate };
+        setInputtedDetailInfo(prevData);
+        setIsDateModalOpen(false);
+        break;
+    }
+    if (inputStage + 1 >= MAX_INPUT_STAGE) {
+      // 모든 단계 입력 완료!
+      storeData(inputtedDetailInfo);
+      return;
     }
     setInputStage(inputStage + 1);
     scrollViewRef.current?.scrollTo({ x: outerScrollViewWidth * (inputStage + 1), animated: true });
@@ -229,6 +324,23 @@ const DetailInputScreen = ({ navigation }: any) => {
     }
   };
 
+  /**
+   * 대충 날짜 선택 모달창내 값 변동 반영하는 함수
+   * @param event DateTimePickerEvent
+   * @param date Date
+   */
+  const onSelectedDateChange = (event: DateTimePickerEvent, date?: Date) => {
+    if (event.type === "set" && date) setSelectedDate(date);
+    setIsDateModalOpen(false);
+  };
+
+  /**
+   * 대충 날짜 선택 모달창 여는 함수
+   */
+  const showDatePicker = () => {
+    setIsDateModalOpen(true);
+  };
+
   useEffect(() => {
     let initialArray: boolean[] = new Array(2);
     setQuery("");
@@ -245,6 +357,10 @@ const DetailInputScreen = ({ navigation }: any) => {
         break;
     }
   }, [inputStage]);
+
+  useEffect(() => {
+    console.log(inputtedDetailInfo);
+  }, [inputtedDetailInfo]);
 
   return (
     <View style={generalStyles.wrap}>
@@ -445,6 +561,26 @@ const DetailInputScreen = ({ navigation }: any) => {
                 style={detailInputStyle.stageIcon}
               />
               <Text style={detailInputStyle.stageTitle}>복약 시작일이 언제인가요?</Text>
+              <View style={detailInputStyle.selectionRowGroup}>
+                <TouchableOpacity
+                  style={[
+                    detailInputStyle.selectionItemsButton,
+                    { backgroundColor: selectedItems[0] ? generalValues.highlightColor : "white" },
+                  ]}
+                  onPress={() => setIsDateModalOpen(true)}
+                >
+                  <Text style={detailInputStyle.selectionItemsLabel}>{formatKoreanDate(selectedDate)}</Text>
+                </TouchableOpacity>
+              </View>
+              {isDateModalOpen && (
+                <DateTimePicker
+                  value={selectedDate}
+                  mode="date"
+                  display="default"
+                  onChange={onSelectedDateChange}
+                  onTouchCancel={() => setIsDateModalOpen(false)}
+                />
+              )}
             </View>
 
             <View style={[detailInputStyle.innerContainer, { width: outerScrollViewWidth }]}>
@@ -455,6 +591,26 @@ const DetailInputScreen = ({ navigation }: any) => {
                 style={detailInputStyle.stageIcon}
               />
               <Text style={detailInputStyle.stageTitle}>복약 종료일이 언제인가요?</Text>
+              <View style={detailInputStyle.selectionRowGroup}>
+                <TouchableOpacity
+                  style={[
+                    detailInputStyle.selectionItemsButton,
+                    { backgroundColor: selectedItems[0] ? generalValues.highlightColor : "white" },
+                  ]}
+                  onPress={() => setIsDateModalOpen(true)}
+                >
+                  <Text style={detailInputStyle.selectionItemsLabel}>{formatKoreanDate(selectedDate)}</Text>
+                </TouchableOpacity>
+              </View>
+              {isDateModalOpen && (
+                <DateTimePicker
+                  value={selectedDate}
+                  mode="date"
+                  display="default"
+                  onChange={onSelectedDateChange}
+                  onTouchCancel={() => setIsDateModalOpen(false)}
+                />
+              )}
             </View>
           </ScrollView>
           <View style={detailInputStyle.stageButtonWrap}>
