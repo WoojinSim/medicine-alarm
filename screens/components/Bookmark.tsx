@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-interface pillSearchInterface { 
+interface pillSearchInterface {
     resultCode: number; // 결과 코드
     resultMsg: string; // 결과 메시지
     numOfRows: number; // 한 페이지 결과 수
@@ -25,7 +25,7 @@ interface pillSearchInterface {
 // favlist = [itemSeq1, itemSeq2, ...];
 
 // favlist 반환
-const loadData = async () => { 
+const loadData = async () => {
     try {
         let favs = await AsyncStorage.getItem("favorites_pill");
         if (favs == null)
@@ -55,9 +55,9 @@ const storeData = async (pillItem: pillSearchInterface) => {
 const retrieveData = async (pillItem: pillSearchInterface) => {
     try {
         let favs = await loadData();
-        
+
         if (favs.length != 0) {
-            if (favs.find(function(data){ return data == pillItem.itemSeq}) != undefined)
+            if (favs.find(function (data) { return data == pillItem.itemSeq }) != undefined)
                 return true;
             else
                 return false;
@@ -84,6 +84,8 @@ const removeData = async (pillItem: pillSearchInterface) => {
     }
 };
 
-export {storeData};
-export {retrieveData};
-export {removeData};
+export { pillSearchInterface };
+export { loadData };
+export { storeData };
+export { retrieveData };
+export { removeData };

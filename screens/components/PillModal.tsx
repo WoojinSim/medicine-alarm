@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal, View, Text, TouchableOpacity, Image, Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 
-import {storeData, retrieveData, removeData} from "../components/Bookmark";
+import { storeData, retrieveData, removeData } from "../components/Bookmark";
 
 import { generalValues } from "../styles/generalValues";
 import { pillModalStyle } from "../styles/pillModalStyle";
@@ -17,30 +17,30 @@ const PillModal = ({ showModal, setShowModal, pillItem }) => {
     const [imgHeight, setImgHeight] = useState(140);
 
     // 북마크 버튼 누를 시 데이터 저장 or 삭제
-    const pressBookmarkButton = async() => {
+    const pressBookmarkButton = async () => {
         !isBookmarked ? storeData(pillItem) : removeData(pillItem);
         setIsBookmarked(!isBookmarked);
         console.log("Bookmark button pressed");
     };
 
     // + 버튼 누를 시 이미지 크기 확대
-    const pressPlusButton = async() => {
+    const pressPlusButton = async () => {
         if (imgWidth < 480 && imgHeight < 260) {
-            setImgWidth(imgWidth+48);
-            setImgHeight(imgHeight+28);
+            setImgWidth(imgWidth + 48);
+            setImgHeight(imgHeight + 28);
         }
     };
 
     // - 버튼 누를 시 이미지 크기 축소
-    const pressMinusButton = async() => {
+    const pressMinusButton = async () => {
         if (imgWidth > 120 && imgHeight > 70) {
-            setImgWidth(imgWidth-48);
-            setImgHeight(imgHeight-28);
+            setImgWidth(imgWidth - 48);
+            setImgHeight(imgHeight - 28);
         }
     };
 
     // 저장소에 존재하는 데이터 확인
-    const loadData = async() => {
+    const loadData = async () => {
         const exists = await retrieveData(pillItem);
         if (exists !== false) {
             setIsBookmarked(true);
@@ -75,29 +75,29 @@ const PillModal = ({ showModal, setShowModal, pillItem }) => {
                         onRequestClose={() => {
                             setShowModal(!showModal);
                         }}>
-                        <ScrollView contentContainerStyle={pillModalStyle.modal}> 
+                        <ScrollView contentContainerStyle={pillModalStyle.modal}>
                             <View style={pillModalStyle.buttonContainer}>
                                 <TouchableOpacity style={pillModalStyle.bookmarkButton} onPress={pressBookmarkButton}>
-                                    {isBookmarked ? 
-                                        (<Icon name="bookmark" size={30} color="#DE3C3C" />) : 
-                                        (<Icon name="bookmark" size={30} color={generalValues.highlightColor} />) }
+                                    {isBookmarked ?
+                                        (<Icon name="bookmark" size={30} color="#DE3C3C" />) :
+                                        (<Icon name="bookmark" size={30} color={generalValues.highlightColor} />)}
                                 </TouchableOpacity>
                                 <TouchableOpacity style={pillModalStyle.closeButton} onPress={() => setShowModal(!showModal)}>
                                     <Icon name="x" size={30} color={generalValues.highlightColor} />
                                 </TouchableOpacity>
                             </View>
-                            <View style={[pillModalStyle.buttonContainer, {alignItems: "center", justifyContent: "center" }]}>
-                                    <TouchableOpacity onPress={pressPlusButton}>
-                                        <Icon name="plus-square" size={30}/>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={pressMinusButton}>
-                                        <Icon name="minus-square" size={30}/>
-                                    </TouchableOpacity>
+                            <View style={[pillModalStyle.buttonContainer, { alignItems: "center", justifyContent: "center" }]}>
+                                <TouchableOpacity onPress={pressPlusButton}>
+                                    <Icon name="plus-square" size={30} />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={pressMinusButton}>
+                                    <Icon name="minus-square" size={30} />
+                                </TouchableOpacity>
                             </View>
-                            <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                 <Image
-                                source={{ uri: pillItem.itemImage != null ? pillItem.itemImage : "" }}
-                                style={[pillModalStyle.itemImage, { width: imgWidth, height: imgHeight }]}
+                                    source={{ uri: pillItem.itemImage != null ? pillItem.itemImage : "" }}
+                                    style={[pillModalStyle.itemImage, { width: imgWidth, height: imgHeight }]}
                                 />
                             </View>
                             <View style={pillModalStyle.itemContainer}>

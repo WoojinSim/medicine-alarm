@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Modal, View, Text, StatusBar, ScrollView, TouchableOpacity, TextInput, Vibration, Animated, Image } from "react-native";
+import { View, Text, StatusBar, TouchableOpacity, TextInput, Vibration, Animated, Image } from "react-native";
 import axios from "axios";
-// import { API_URL } from "@env"; // 오류뜨길래 그냥 내부 변수로 설정
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/Feather";
 
 import { pillSearchStyle } from "../styles/pillSearchStyle";
@@ -10,37 +8,17 @@ import { generalStyles } from "../styles/generalStyle";
 import { generalValues } from "../styles/generalValues";
 
 import HeaderWithBack from "../components/HeaderWithBack";
+import PillListDisplay from "../components/PillListDisplay";
 import PillModal from "../components/PillModal";
+import { pillSearchInterface } from "../components/Bookmark";
 import { FlatList } from "react-native-gesture-handler";
-import { server } from "typescript";
-
-interface pillSearchInterface { // api 다른 거 사용하면서 좀 수정했음
-  resultCode: number; // 결과 코드
-  resultMsg: string; // 결과 메시지
-  numOfRows: number; // 한 페이지 결과 수
-  pageNo: number; // 페이지 번호
-  totalCount: number; // 전체 결과 수
-  entpName: string; // 업체명
-  itemName: string; // 제품명
-  itemSeq: number; // 품목기준코드
-  efcyQesitm: string; // 문항1(효능)
-  useMethodQesitm: string; // 문항2(사용법)
-  atpnWarnQesitm: string; // 문항3(주의사항 경고)
-  atpnQesitm: string; // 문항4(주의사항)
-  intrcQesitm: string; // 문항5(상호작용)
-  seQesitm: string; // 문항6(부작용)
-  depositMethodQesitm: string; // 문항7(보관법)
-  openDe: number; // 공개일자
-  updateDe: number; // 수정일자
-  itemImage: string; // 낱알이미지
-}
-
 
 const PillSearchScreen = () => {
   const [query, setQuery] = useState("");
   const [alert, setAlert] = useState("");
   const [alertColor, setAlertColor] = useState("red");
   const [isLoading, setIsLoading] = useState(false);
+  const [showFavList, setShowFavList] = useState(false);
   const [showAutoComplete, setShowAutoComplete] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [searchData, setSearchData] = useState<pillSearchInterface[]>([]);
@@ -55,6 +33,7 @@ const PillSearchScreen = () => {
     inputRange: [0, 1],
     outputRange: [generalValues.highlightColor, "red"],
   });
+
   const errorAnimation = () => {
     Animated.parallel([
       Animated.sequence([
@@ -72,7 +51,7 @@ const PillSearchScreen = () => {
     ]).start();
   };
 
-  const fetchData = async (searchText: string) => {
+  const fetchData = async (searchText: string) => { // API로 검색 내용 가져오기
     const apiUrl = "http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList";
     let queryParams = "?" + encodeURIComponent("serviceKey") + "=" + API_URL; // API키
     queryParams += "&" + encodeURIComponent("itemName") + "=" + encodeURIComponent(searchText); /**/
@@ -94,7 +73,7 @@ const PillSearchScreen = () => {
     }
   };
 
-  const searchPills = () => { 
+  const searchPills = () => { // 쿼리 검사
     const regex: RegExp = /^[a-zA-Z가-힣0-9\s():<.>]{2,40}$/;
     Vibration.vibrate(20);
     setAlertColor("red");
@@ -113,14 +92,14 @@ const PillSearchScreen = () => {
     fetchData(query);
   };
 
-  const autoComplete = async (searchText: string) => {
+  const autoComplete = async (searchText: string) => { // 검색어 자동완성
     const apiUrl = "http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList";
     const regex: RegExp = /^[a-zA-Z가-힣ㄱ-ㅎ0-9\s():<.>]{2,40}$/;
     let queryParams = "?" + encodeURIComponent("serviceKey") + "=" + API_URL; // API키
-    queryParams += "&" + encodeURIComponent("itemName") + "=" + encodeURIComponent(searchText); /**/
-    queryParams += "&" + encodeURIComponent("pageNo") + "=" + encodeURIComponent("1"); /**/
-    queryParams += "&" + encodeURIComponent("numOfRows") + "=" + encodeURIComponent("50"); /**/
-    queryParams += "&" + encodeURIComponent("type") + "=" + encodeURIComponent("json"); /**/
+    queryParams += "&" + encodeURIComponent("itemName") + "=" + encodeURIComponent(searchText);
+    queryParams += "&" + encodeURIComponent("pageNo") + "=" + encodeURIComponent("1");
+    queryParams += "&" + encodeURIComponent("numOfRows") + "=" + encodeURIComponent("50");
+    queryParams += "&" + encodeURIComponent("type") + "=" + encodeURIComponent("json");
 
     if (searchText.length > 1 && regex.test(searchText)) {
       if (regex.test(searchText)) {
@@ -177,41 +156,47 @@ const PillSearchScreen = () => {
   return (
     <View style={generalStyles.wrap}>
       <StatusBar backgroundColor={generalValues.containerColor} barStyle="dark-content" animated={true} />
+      <TouchableOpacity style={pillSearchStyle.searchButton} onPress={() => { setShowFavList(!showFavList) }}>
+        <Icon name="list" size={30} color={generalValues.highlightColor} />
+      </TouchableOpacity>
       <HeaderWithBack title="약 검색" />
-      <Animated.View
-        style={[
-          pillSearchStyle.searchBoxWrap,
-          { transform: [{ translateX: shakeTranslate }], borderColor: interpolatedBorderColor },
-        ]}
-      >
-        <TextInput
-          placeholder="약 이름을 입력해주세요."
-          style={pillSearchStyle.searchBox}
-          selectionColor={generalValues.highlightColor}
-          onChange={(event) => { autoComplete(event.nativeEvent.text) }}
-          onChangeText={setQuery}
-          onSubmitEditing={searchPills}
-          value={query}
-        ></TextInput>
-        <TouchableOpacity style={pillSearchStyle.searchButton} onPress={searchPills}>
-          <Icon name="search" size={30} color={generalValues.highlightColor} />
-        </TouchableOpacity>
-      </Animated.View>
-      {showAutoComplete ? // showAutoComplete 자체 문제는 아닌듯 렉인가?? 내일 회의하면서 상의 + 아직 뭐가 원인인지 모르겟다
-        <FlatList
-          contentContainerStyle={showAutoComplete ? pillSearchStyle.showAutoCompleteContainer : null}
-          data={autoCompleteData}
-          renderItem={renderAutoSearchItem}
-          keyExtractor={item => String(item.itemSeq)}
-          extraData={showAutoComplete} /> : null}
-      <View style={pillSearchStyle.alertContainer}>
-        <Text style={[pillSearchStyle.alertLabel, { color: alertColor }]}>{alert}</Text>
-      </View>
-      <FlatList
-        data={searchData}
-        renderItem={renderSearchItem}
-        keyExtractor={item => String(item.itemSeq)}
-      />
+      {!showFavList ?
+        <>
+        <Animated.View style={[
+            pillSearchStyle.searchBoxWrap,
+            { transform: [{ translateX: shakeTranslate }], borderColor: interpolatedBorderColor },]} >
+          <TextInput
+            placeholder="약 이름을 입력해주세요."
+            style={pillSearchStyle.searchBox}
+            selectionColor={generalValues.highlightColor}
+            onChange={(event) => { autoComplete(event.nativeEvent.text); }}
+            onChangeText={setQuery}
+            onSubmitEditing={searchPills}
+            value={query}
+          ></TextInput>
+          <TouchableOpacity style={pillSearchStyle.searchButton} onPress={searchPills}>
+            <Icon name="search" size={30} color={generalValues.highlightColor} />
+          </TouchableOpacity>
+        </Animated.View>
+          {{showAutoComplete} ?
+            <FlatList
+              contentContainerStyle={showAutoComplete ? pillSearchStyle.showAutoCompleteContainer : null}
+              data={autoCompleteData}
+              renderItem={renderAutoSearchItem}
+              keyExtractor={item => String(item.itemSeq)}
+              extraData={showAutoComplete} /> : null}
+          <View style={pillSearchStyle.alertContainer}>
+            <Text style={[pillSearchStyle.alertLabel, { color: alertColor }]}>{alert}</Text>
+          </View>
+          <FlatList
+            data={searchData}
+            renderItem={renderSearchItem}
+            keyExtractor={item => String(item.itemSeq)}/> 
+          </> :
+        <PillListDisplay
+          showFavList={showFavList}
+          setShowFavList={setShowFavList} />
+      }
       {showModal ?
         <PillModal
           showModal={showModal}
