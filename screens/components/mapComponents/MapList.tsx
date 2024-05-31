@@ -167,6 +167,8 @@ const MapList = () => {
                     <TouchableWithoutFeedback onPress={handleCloseList}>
                         <View style={modalStyles.modalContainer}>
                             <View style={modalStyles.modalContentCombine}>
+                                {globalPharmacyData.length === 0 ? 
+                                    <Text style={modalStyles.searchNone}>결과가 없습니다.</Text> :
                                 <ScrollView 
                                     contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}
                                     onStartShouldSetResponder={() => true}>
@@ -196,6 +198,7 @@ const MapList = () => {
                                         </TouchableOpacity>
                                     ))}
                                 </ScrollView>
+                                }   
                             </View>
                         </View>
                     </TouchableWithoutFeedback>

@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions} from "react-native";
+
+const { width: screenWid, height: screenHei } = Dimensions.get("screen");
 
 // 기존 컬러 코드
 const searchButtonColor = "#C2C96D";
@@ -6,13 +8,27 @@ const searchButtonColor = "#C2C96D";
 // 더 쨍한 버전
 // const searchButtonColor = "#ACD31E";
 
+// 기존 바탕색과 맞춤 
+const listBackgroundColor = "#F2F2F2";
+// const listBackgroundColoe = "#FFFFFF";
+
+// 검색창
+const searchBackgroundColor = "#FFFFFF";
+
 export const listStyles = StyleSheet.create({
     container: {
         padding: 10,
-        //paddingBottom: 100,
+        paddingBottom: 80,     // 리스트 하단이 잘려서 추가한 padding
+        // backgroundColor: listBackgroundColor,
+    },
+    searchContainer: {
+        backgroundColor: listBackgroundColor,
     },
     favListContainer: {
         padding: 15,
+        backgroundColor: listBackgroundColor,
+        height: screenHei,
+        // flex: 1,
     },
     pharmacy: {
         marginBottom: 10,
@@ -29,6 +45,7 @@ export const listStyles = StyleSheet.create({
         padding: 10,
         margin: 10,
         marginTop: 0,
+        backgroundColor: searchBackgroundColor,
     },
     searchBtn: {
         backgroundColor: searchButtonColor,

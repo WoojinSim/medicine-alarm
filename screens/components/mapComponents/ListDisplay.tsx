@@ -80,7 +80,7 @@ const ListDisplay = () => {
     );
 
     return (
-        <View>
+        <View style={listStyles.searchContainer}>
             <TextInput
                 style={listStyles.search}
                 placeholder="검색어를 입력하세요"

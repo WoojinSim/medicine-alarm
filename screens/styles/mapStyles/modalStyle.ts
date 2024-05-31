@@ -124,4 +124,9 @@ export const modalStyles = StyleSheet.create({
       top: 0,
       right: 0,
     },
+    searchNone: {
+      fontSize: 20, 
+      fontWeight: 'bold',
+      paddingTop: 10,
+    }
   });
