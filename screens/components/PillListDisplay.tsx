@@ -22,13 +22,14 @@ const PillListDisplay = ({ showFavList, setShowFavList }) => {
         const exists = await loadData();
         if (exists != null) {
             setFavList(exists);
-            console.log(exists);
         }
     };
 
     const fetchData = async () => { // API로 즐겨찾기 아이템 내용 가져오기
         const apiUrl = "http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList";
         setSearchData([]);
+        let temp = [];
+
         for (let i=0; i < favList.length; i++ ) {
 
             let queryParams = "?" + encodeURIComponent("serviceKey") + "=" + API_URL; // API키
@@ -38,14 +39,15 @@ const PillListDisplay = ({ showFavList, setShowFavList }) => {
             queryParams += "&" + encodeURIComponent("type") + "=" + encodeURIComponent("json"); /**/
 
             try {
-                const response = await axios.get(`${apiUrl}${queryParams}`);
-                setSearchData(searchData.concat(response.data.body.items));
-                console.log(response.data.body.items);
-                //setSearchData(response.data.body.items != null ? response.data.body.items : []);
+                let response = await axios.get(`${apiUrl}${queryParams}`);
+                temp.push(response.data.body.items[0]);
               } catch (error) {
                 console.log(error);
               }
         }
+        
+        setSearchData(temp);
+
       };
 
     const renderFavItem = ({ item }: any) => ( // 세부 항목 렌더링, 속도 개선을 위한 flatlist 사용
@@ -69,16 +71,20 @@ const PillListDisplay = ({ showFavList, setShowFavList }) => {
 
     useEffect(() => {
         fetchList();
-        fetchData();
     }, [showFavList]);
 
+    useEffect(() => {
+        if (favList.length > 0) {
+            fetchData();
+        }
+    }, [favList]);
 
     return (
         <View style={generalStyles.wrap}>
             <FlatList
                 data={searchData}
                 renderItem={renderFavItem}
-                keyExtractor={item => String(item.itemSeq)}
+                keyExtractor={item => item.itemSeq ? String(item.itemSeq) : String(Math.random())}
             />
             {showModal ?
                 <PillModal
