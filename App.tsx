@@ -17,6 +17,8 @@ import AddPillScheduleScreen from "./screens/AddPillSchedule/AddPillScheduleScre
 import PillSearchScreen from "./screens/AddPillSchedule/PillSearchScreen";
 import DetailInputScreen from "./screens/AddPillSchedule/DetailInputScreen";
 
+
+
 import { generalStyles } from "./screens/styles/generalStyle";
 import { generalValues } from "./screens/styles/generalValues";
 

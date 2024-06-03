@@ -20,6 +20,74 @@ export const editPillScheduleStyle = StyleSheet.create({
     marginBottom: 50,
     opacity: 0.4,
   },
+
+  itemWrap: {
+    paddingHorizontal: 15,
+    paddingTop: 25,
+    backgroundColor: "white",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  itemTitleWrap: {
+    width: "100%",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  itemTitleLabelBold: {
+    fontSize: 26,
+    fontFamily: "NanumSquareNeoHeavy",
+    marginRight: 10,
+  },
+  itemTitleLabelReg: {
+    fontSize: 18,
+    fontFamily: "NanumSquareNeoLight",
+    marginRight: 10,
+  },
+
+  itemInfoWrap: {
+    width: "100%",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    paddingVertical: 15,
+    borderTopWidth: 1,
+    borderBlockColor: "#00000025",
+  },
+  itemInfoLabelWrap: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  itemInfoLabel: {
+    flex: 1,
+    fontFamily: "NanumSquareNeoBold",
+    fontSize: 18,
+  },
+
+  itemInfoTagWarp: {
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    marginTop: 5,
+  },
+  itemInfoTag: {
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 5,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    backgroundColor: generalValues.highlightColor,
+  },
+  itemInfoTagLabel: {
+    color: "#FFF",
+    fontFamily: "NanumSquareNeoBold",
+    fontSize: 14,
+  },
+
   addButtonWrap: {
     position: "absolute",
     bottom: 20,
