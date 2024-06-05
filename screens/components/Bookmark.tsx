@@ -31,11 +31,8 @@ interface pillSearchInterface {
   bizrno: string;
 }
 
-// 즐겨찾기 목록은 JSON 형식으로 저장, Array 형식으로 사용됨
-// favlist = [itemSeq1, itemSeq2, ...];
-
 // favlist 반환
-const loadData = async () => {
+const loadData = async (): Promise<pillSearchInterface[]> => {
   try {
     let favListRaw: string | null = await AsyncStorage.getItem("favorites_pill");
     if (favListRaw) {

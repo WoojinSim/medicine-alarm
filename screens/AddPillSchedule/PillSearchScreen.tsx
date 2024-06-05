@@ -286,7 +286,7 @@ const PillSearchScreen = ({ navigation }: any) => {
           <FlatList data={searchData} renderItem={renderSearchItem} keyExtractor={(item) => String(item.itemSeq)} />
         </>
       ) : (
-        <PillListDisplay showFavList={showFavList} setShowFavList={setShowFavList} />
+        <PillListDisplay setSelectedData={setSelectedData} setShowModal={setShowModal} />
       )}
       {showModal && selectedData ? <PillModal showModal={showModal} setShowModal={setShowModal} pillItem={selectedData} /> : null}
     </View>
