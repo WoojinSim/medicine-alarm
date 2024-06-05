@@ -2,7 +2,12 @@ import { StyleSheet } from "react-native";
 import { generalValues } from "./generalValues";
 
 export const pillSearchStyle = StyleSheet.create({
+  headerTextWrap: {
+    flexDirection: "row",
+  },
+
   searchBoxWrap: {
+    position: "relative",
     margin: 10,
     marginBottom: 0,
     flexDirection: "row",
@@ -12,6 +17,11 @@ export const pillSearchStyle = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
+    overflow: "visible",
+    zIndex: 100,
+  },
+  focusedSearchBoxWrap: {
+    borderBottomLeftRadius: 0,
   },
   searchBox: {
     flex: 1,
@@ -27,19 +37,22 @@ export const pillSearchStyle = StyleSheet.create({
     alignItems: "center",
     marginRight: 8,
   },
+
   showAutoCompleteContainer: {
-    margin: 10,
-    marginBottom: 0,
-    flexDirection: "column",
-    borderRadius: 15,
-    borderWidth: 2,
+    position: "absolute",
+    top: "100%",
+    left: -2,
+    borderLeftWidth: 2,
+    borderBottomWidth: 2,
+    borderRightWidth: 2,
     borderColor: generalValues.highlightColor,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    maxHeight: 400,
     backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "flex-start",
   },
   hideAutoCompleteContainer: {
-    display: 'none',
+    display: "none",
     height: 0,
     width: 0,
     margin: 0,
@@ -54,6 +67,7 @@ export const pillSearchStyle = StyleSheet.create({
     fontSize: 40,
     zIndex: 2,
   },
+
   alertContainer: {
     justifyContent: "center",
     alignItems: "center",
@@ -71,6 +85,7 @@ export const pillSearchStyle = StyleSheet.create({
     flex: 1,
     padding: 10,
     marginBottom: 10,
+    marginHorizontal: 10,
     backgroundColor: "white",
     borderRadius: 10,
     justifyContent: "center",
