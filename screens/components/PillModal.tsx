@@ -25,14 +25,18 @@ const PillModal: React.FC<ChildProps> = ({ showModal, setShowModal, pillItem }) 
 
   // 북마크 버튼 누를 시 데이터 저장 or 삭제
   const pressBookmarkButton = async () => {
-    !isBookmarked ? storeData(pillItem) : removeData(pillItem);
+    !isBookmarked ? await storeData(pillItem) : await removeData(pillItem);
     setIsBookmarked(!isBookmarked);
     console.log("Bookmark button pressed");
   };
 
+  const pressAlarmButton = async () => {
+    // DetailInputScreen으로 넘어가는 내용
+  };
+
   // + 버튼 누를 시 이미지 크기 확대
   const pressPlusButton = async () => {
-    if (imgWidth < 480 && imgHeight < 260) {
+    if (imgWidth < 375 && imgHeight < 260) {
       setImgWidth(imgWidth + 48);
       setImgHeight(imgHeight + 28);
     }
@@ -58,7 +62,7 @@ const PillModal: React.FC<ChildProps> = ({ showModal, setShowModal, pillItem }) 
 
   useEffect(() => {
     loadData();
-  });
+  }, []);
 
   return (
     <>
@@ -91,6 +95,9 @@ const PillModal: React.FC<ChildProps> = ({ showModal, setShowModal, pillItem }) 
                     <Icon name="bookmark" size={30} color={generalValues.highlightColor} />
                   )}
                 </TouchableOpacity>
+                <TouchableOpacity style={pillModalStyle.alarmButton} onPress={pressAlarmButton}>
+                  <Icon name="bell" size={30} color={generalValues.highlightColor} />
+                </TouchableOpacity>
                 <TouchableOpacity style={pillModalStyle.closeButton} onPress={() => setShowModal(!showModal)}>
                   <Icon name="x" size={30} color={generalValues.highlightColor} />
                 </TouchableOpacity>
@@ -105,7 +112,7 @@ const PillModal: React.FC<ChildProps> = ({ showModal, setShowModal, pillItem }) 
               </View>
               <View style={{ alignItems: "center", justifyContent: "center" }}>
                 <Image
-                  source={pillItem.itemImage ? { uri: pillItem.itemImage } : require("../../assets/image.png")}
+                  source={pillItem.itemImage ? { uri: pillItem.itemImage } : require("../../assets/not_supported.png")}
                   style={[pillModalStyle.itemImage, { width: imgWidth, height: imgHeight }]}
                 />
               </View>

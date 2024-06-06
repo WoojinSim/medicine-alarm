@@ -147,7 +147,7 @@ const PillSearchScreen = ({ navigation }: any) => {
       }}
     >
       <Image
-        source={item.itemImage ? { uri: item.itemImage } : require("../../assets/image.png")}
+        source={item.itemImage ? { uri: item.itemImage } : require("../../assets/not_supported.png")}
         style={[pillSearchStyle.resultImage, { width: 120, height: 65 }]}
       />
       <View style={pillSearchStyle.resultLabelWrap}>
