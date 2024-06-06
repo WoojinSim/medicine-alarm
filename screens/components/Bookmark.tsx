@@ -90,6 +90,7 @@ const removeData = async (pillItem: pillSearchInterface) => {
   }
 };
 
+
 export { pillSearchInterface };
 export { loadData };
 export { storeData };
