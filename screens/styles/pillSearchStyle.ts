@@ -81,17 +81,19 @@ export const pillSearchStyle = StyleSheet.create({
     marginRight: generalValues.sidePadding,
     marginLeft: generalValues.sidePadding,
   },
+
   resultItemContainer: {
-    flex: 1,
+    //flex: 1,
     padding: 10,
     marginBottom: 10,
-    marginHorizontal: 10,
+    //marginHorizontal: 10,
     backgroundColor: "white",
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
   },
+
   resultImage: {
     borderRadius: 10,
     marginRight: 10,

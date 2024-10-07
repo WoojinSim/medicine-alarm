@@ -23,42 +23,9 @@ import { detailInputStyle } from "../styles/detailInputStyle";
 import { generalStyles } from "../styles/generalStyle";
 import { generalValues } from "../styles/generalValues";
 
-import HeaderWithBack from "../components/HeaderWithBack";
+import { TIME_TYPE, pillScheduleDetailInterface, pillSearchInterface, storeObjectType } from "../../interfaces";
 
-/** Pill Search 스크린에서부터 라우트로 넘겨받는 데이터 인터페이스 */
-interface pillDataInterface {
-  imageURL: string | null;
-  pillSEQ: string;
-  pillName: string;
-  pillLore: string;
-}
-/** 시간대 별 코드 타입  */
-export type TIME_TYPE = "AFTER_WAKING_UP" | "AFTER_BREAKFAST" | "AFTER_LUNCH" | "AFTER_DINNER" | "BEFORE_BED" | "ANYTIME";
-/** 알람 저장 인터페이스 */
-export interface pillScheduleDetailInterface {
-  /** 약 사진 */
-  MEDICINE_IMAGE: string;
-  /** 약 이름 */
-  MEDICINE_NAME: string;
-  /** 약 설명 */
-  MEDICINE_CLASS_NAME: string | null;
-  /** 복약 주기 (일 수) */
-  MEDICINE_INTERVALS: number | null;
-  /** 복약 시간 */
-  MEDICINE_TIME_ZONE: TIME_TYPE[];
-  /** 상세 복약 시간 TODO: 추후 판단 후 삭제 예정 */
-  MEDICINE_TIME: string[] | null;
-  /** 복약 갯수 */
-  NUMBER_OF_PILLS: number | null;
-  /** 복약 시작 날짜 */
-  START_DATE: Date | null;
-  /** 복약 종료 날짜 */
-  END_DATE: Date | null;
-  /** 총 복약 일 수 (TODO: 추후 판단 후 삭제 예정) */
-  TOTAL_DAYS: number | null;
-}
-/** 알람이 저장될 때 사용될 Json 겸 Object 인터페이스 타입 */
-export type storeObjectType = Record<TIME_TYPE, pillScheduleDetailInterface[]>;
+import HeaderWithBack from "../components/HeaderWithBack";
 
 const MAX_INPUT_STAGE = 5; // TODO: !!! 내용 추가시 꼭 수정할것 !!!
 
@@ -77,16 +44,15 @@ const StageIndicator = (MAX_STAGE: number, CURRENT_STAGE: number) => {
 
 const DetailInputScreen = ({ navigation }: any) => {
   const route = useRoute(); // 라우트 선언
-  const selectedPillData = route.params as pillDataInterface; // 선택한 약 가져오기
+  const { selectedData: selectedPillData } = route.params as { selectedData: pillSearchInterface }; // 선택한 약 가져오기
 
   const [inputStage, setInputStage] = useState(0); // 현재 입력창 단계
   const [outerScrollViewWidth, setOuterScrollViewWidth] = useState(0); // 입력창 Wrap Width 값
   const [selectedItems, setSelectedItems] = useState<boolean[]>([]); // 입력창 내 선택 항목 선택 여부 boolean 배열
   const [inputtedDetailInfo, setInputtedDetailInfo] = useState<pillScheduleDetailInterface>({
-    // 복약 세부정보 Object
-    MEDICINE_IMAGE: selectedPillData.imageURL != null ? selectedPillData.imageURL : "",
-    MEDICINE_NAME: selectedPillData.pillName,
-    MEDICINE_CLASS_NAME: selectedPillData.pillLore,
+    // 복약 세부정보 Object 초기 설정
+    MEDICINE_INFO: selectedPillData,
+    MEDICINE_CLASS_NAME: selectedPillData.itemName,
     MEDICINE_INTERVALS: null,
     MEDICINE_TIME_ZONE: ["ANYTIME"],
     MEDICINE_TIME: null,
@@ -180,7 +146,8 @@ const DetailInputScreen = ({ navigation }: any) => {
       BEFORE_BED: [],
       ANYTIME: [],
     };
-
+    console.log("-------------------------");
+    console.log(value);
     try {
       const existingData = await AsyncStorage.getItem("@PillSchedule"); // 기존 데이터를 불러옮
       const dataArray: storeObjectType = existingData ? JSON.parse(existingData) : initDataArray; // 데이터가 쌓일 배열을 생성 (초기화)
@@ -257,7 +224,9 @@ const DetailInputScreen = ({ navigation }: any) => {
 
       case 3:
         // 시작 날짜
-        prevData = { ...prevData, START_DATE: selectedDate };
+        let timeTmp = selectedDate;
+        timeTmp.setHours(0, 0, 0, 0);
+        prevData = { ...prevData, START_DATE: timeTmp };
         setInputtedDetailInfo(prevData);
         setIsDateModalOpen(false);
         break;
@@ -269,15 +238,12 @@ const DetailInputScreen = ({ navigation }: any) => {
           errorAnimation();
           return;
         }
-        prevData = { ...prevData, END_DATE: selectedDate };
+        timeTmp = selectedDate;
+        timeTmp.setHours(0, 0, 0, 0);
+        prevData = { ...prevData, END_DATE: timeTmp };
         setInputtedDetailInfo(prevData);
         setIsDateModalOpen(false);
         break;
-    }
-    if (inputStage + 1 >= MAX_INPUT_STAGE) {
-      // 모든 단계 입력 완료!
-      storeData(inputtedDetailInfo);
-      return;
     }
     setInputStage(inputStage + 1);
     scrollViewRef.current?.scrollTo({ x: outerScrollViewWidth * (inputStage + 1), animated: true });
@@ -360,27 +326,39 @@ const DetailInputScreen = ({ navigation }: any) => {
 
   useEffect(() => {
     console.log(inputtedDetailInfo);
-  }, [inputtedDetailInfo]);
+    if (inputStage >= MAX_INPUT_STAGE) {
+      // 모든 단계 입력 완료!
+      storeData(inputtedDetailInfo);
+      return;
+    }
+  }, [inputStage, inputtedDetailInfo]);
 
   return (
     <View style={generalStyles.wrap}>
       <StatusBar backgroundColor={generalValues.containerColor} barStyle="dark-content" animated={true} />
       <HeaderWithBack title="세부정보 입력" />
+
       <View onLayout={layOutRefresh} style={detailInputStyle.outerContainer}>
+        {/* 상단 선택 의약품 정보 디스플레이 */}
         <View style={[pillSearchStyle.resultItemContainer, { marginTop: 10 }]}>
           <Image
-            source={{ uri: selectedPillData.imageURL != null ? selectedPillData.imageURL : "" }}
+            source={{ uri: selectedPillData.itemImage != null ? selectedPillData.itemImage : "" }}
             style={[pillSearchStyle.resultImage, { width: 120, height: 65 }]}
           />
           <View style={pillSearchStyle.resultLabelWrap}>
-            <Text style={pillSearchStyle.resultItemTitle}>{selectedPillData.pillName}</Text>
-            <Text style={pillSearchStyle.resultItemLore}>{selectedPillData.pillLore}</Text>
+            <Text style={pillSearchStyle.resultItemTitle}>{selectedPillData.itemName}</Text>
+            <Text style={pillSearchStyle.resultItemLore}>{selectedPillData.itemSeq}</Text>
           </View>
         </View>
 
+        {/* 하단 의약품 알람 상세정보 입력 컴포넌트 컨테이너 (가로 스크롤 사용자조작X)*/}
         <View style={detailInputStyle.container}>
           <View style={detailInputStyle.stageIndicatorWrap}>{StageIndicator(MAX_INPUT_STAGE, inputStage)}</View>
 
+          {/*
+            컨테이너가 가로로 자연스럽게 넘어가는 UX구현을 위해 가로 스크롤 뷰 사용
+            사용자 입력 후 누르는 이전, 다음 버튼은 이 스크롤 뷰에 포함되지 않음
+          */}
           <ScrollView
             showsHorizontalScrollIndicator={false}
             horizontal={true}
@@ -389,6 +367,7 @@ const DetailInputScreen = ({ navigation }: any) => {
             style={detailInputStyle.innerHrizonScrollView}
             contentContainerStyle={{ alignItems: "flex-start" }}
           >
+            {/* 얼마나 자주 복약하는지? 복약 간격 일 수 입력 */}
             <View style={[detailInputStyle.innerContainer, { width: outerScrollViewWidth }]}>
               <IconAntDesign name="calendar" size={50} color={generalValues.highlightColor} style={detailInputStyle.stageIcon} />
               <Text style={detailInputStyle.stageTitle}>얼마나 자주 복약하시나요?</Text>
@@ -433,6 +412,7 @@ const DetailInputScreen = ({ navigation }: any) => {
               </View>
             </View>
 
+            {/* 언제 복약하는지? 하루 중 복약 시간 입력 */}
             <View style={[detailInputStyle.innerContainer, { width: outerScrollViewWidth }]}>
               <IconAntDesign name="calendar" size={50} color={generalValues.highlightColor} style={detailInputStyle.stageIcon} />
               <Text style={detailInputStyle.stageTitle}>언제 복약하시나요?</Text>
@@ -524,6 +504,7 @@ const DetailInputScreen = ({ navigation }: any) => {
               </View>
             </View>
 
+            {/* 1회 복약 시 몇 정을 복약하는지? 몇 알 먹는지 입력 */}
             <View style={[detailInputStyle.innerContainer, { width: outerScrollViewWidth }]}>
               <IconMaterialCommunityIcons
                 name="pill"
@@ -541,6 +522,7 @@ const DetailInputScreen = ({ navigation }: any) => {
               ></TextInput>
             </View>
 
+            {/* TODO: 복약 시간 사용자 입력 (계획상 축소 및 최종버전에서 미사용시 삭제 요망) */}
             {/*
             <View style={[detailInputStyle.innerContainer, { width: outerScrollViewWidth }]}>
               <IconAntDesign
@@ -553,6 +535,7 @@ const DetailInputScreen = ({ navigation }: any) => {
             </View>
             */}
 
+            {/* 복약 시작일이 언제인지? 날짜 입력 */}
             <View style={[detailInputStyle.innerContainer, { width: outerScrollViewWidth }]}>
               <IconMaterialCommunityIcons
                 name="pill"
@@ -563,10 +546,7 @@ const DetailInputScreen = ({ navigation }: any) => {
               <Text style={detailInputStyle.stageTitle}>복약 시작일이 언제인가요?</Text>
               <View style={detailInputStyle.selectionRowGroup}>
                 <TouchableOpacity
-                  style={[
-                    detailInputStyle.selectionItemsButton,
-                    { backgroundColor: selectedItems[0] ? generalValues.highlightColor : "white" },
-                  ]}
+                  style={[detailInputStyle.selectionItemsButton, { backgroundColor: "white" }]}
                   onPress={() => setIsDateModalOpen(true)}
                 >
                   <Text style={detailInputStyle.selectionItemsLabel}>{formatKoreanDate(selectedDate)}</Text>
@@ -583,6 +563,7 @@ const DetailInputScreen = ({ navigation }: any) => {
               )}
             </View>
 
+            {/* 복약 종료일이 언제인지? 날짜 입력 */}
             <View style={[detailInputStyle.innerContainer, { width: outerScrollViewWidth }]}>
               <IconMaterialCommunityIcons
                 name="pill"
@@ -593,10 +574,7 @@ const DetailInputScreen = ({ navigation }: any) => {
               <Text style={detailInputStyle.stageTitle}>복약 종료일이 언제인가요?</Text>
               <View style={detailInputStyle.selectionRowGroup}>
                 <TouchableOpacity
-                  style={[
-                    detailInputStyle.selectionItemsButton,
-                    { backgroundColor: selectedItems[0] ? generalValues.highlightColor : "white" },
-                  ]}
+                  style={[detailInputStyle.selectionItemsButton, { backgroundColor: "white" }]}
                   onPress={() => setIsDateModalOpen(true)}
                 >
                   <Text style={detailInputStyle.selectionItemsLabel}>{formatKoreanDate(selectedDate)}</Text>
@@ -613,6 +591,8 @@ const DetailInputScreen = ({ navigation }: any) => {
               )}
             </View>
           </ScrollView>
+
+          {/* 이전, 다음 버튼 컨테이너 */}
           <View style={detailInputStyle.stageButtonWrap}>
             <TouchableOpacity
               onPress={previousStage}

@@ -7,11 +7,10 @@ export const mainStyles = StyleSheet.create({
     flex: 1,
     fontFamily: "NanumSquareNeoRegular",
     borderRadius: generalValues.borderRadius,
-    padding: 10,
     backgroundColor: "#FFF",
-    height: 500,
     overflow: "hidden",
     position: "relative",
+    alignItems: "center",
   },
   gradientBackground: {
     position: "absolute",
@@ -29,5 +28,34 @@ export const mainStyles = StyleSheet.create({
     backgroundColor: "#FFF",
     justifyContent: "center",
     alignItems: "center",
+  },
+  navigationBtnContainer: {
+    flex: 1,
+    fontFamily: "NanumSquareNeoRegular",
+    borderRadius: generalValues.borderRadius,
+    backgroundColor: "#FFF",
+    overflow: "hidden",
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    paddingHorizontal: 30,
+    paddingVertical: 20,
+  },
+  navigationBtnImage: {
+    width: 50,
+    height: 50,
+    marginRight: 25,
+  },
+  navigationBtnTitleContainer: {
+    flex: 1,
+  },
+  navigationBtnTitle: {
+    fontFamily: "NanumSquareNeoBold",
+    fontSize: 22,
+  },
+  navigationBtnSubTitle: {
+    fontFamily: "NanumSquareNeoLight",
+    fontSize: 18,
   },
 });

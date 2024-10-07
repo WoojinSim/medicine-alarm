@@ -12,7 +12,7 @@ import HeaderWithBack from "../components/HeaderWithBack";
 const AddPillScheduleScreen = ({ navigation }: any) => {
   const goToPillSearchScreen = () => {
     Vibration.vibrate(20);
-    navigation.navigate("PillSearchScreen");
+    navigation.navigate("PillSearchScreen", { isSetAlarm: true });
   };
 
   return (

@@ -9,9 +9,11 @@ import { generalStyles } from "./styles/generalStyle";
 import { generalValues } from "./styles/generalValues";
 import { pillSearchStyle } from "./styles/pillSearchStyle";
 
-import { TIME_TYPE, pillScheduleDetailInterface, storeObjectType } from "./AddPillSchedule/DetailInputScreen";
+import { TIME_TYPE, storeObjectType } from "../interfaces";
 
 import HeaderWithBack from "./components/HeaderWithBack";
+
+const timeZoneList: TIME_TYPE[] = ["AFTER_WAKING_UP", "AFTER_BREAKFAST", "AFTER_LUNCH", "AFTER_DINNER", "BEFORE_BED", "ANYTIME"];
 
 /**
  * 약섭취 일정(스케쥴) 설정 화면
@@ -26,14 +28,6 @@ const EditPillScheduleScreen = ({ navigation }: any) => {
     BEFORE_BED: [],
     ANYTIME: [],
   });
-  const timeZoneList: TIME_TYPE[] = [
-    "AFTER_WAKING_UP",
-    "AFTER_BREAKFAST",
-    "AFTER_LUNCH",
-    "AFTER_DINNER",
-    "BEFORE_BED",
-    "ANYTIME",
-  ];
 
   const goToAddPillScheduleScreen = () => {
     Vibration.vibrate(20);
@@ -105,15 +99,12 @@ const EditPillScheduleScreen = ({ navigation }: any) => {
     return () => clearInterval(bounceInterval);
   }, [translateY, alarmData]);
 
-  useEffect(() => {
-    console.log(alarmData);
-    console.log(Object.values(alarmData).every((array) => array.length < 1));
-  }, [alarmData]);
-
   return (
     <View style={generalStyles.wrap}>
       <StatusBar backgroundColor={generalValues.containerColor} barStyle="dark-content" animated={true} />
       <HeaderWithBack title="복용 알람" />
+
+      {/* 등록된 알람이 있을 때, 알람 내용 표출 */}
       {!Object.values(alarmData).every((array) => array.length < 1) ? (
         <ScrollView style={editPillScheduleStyle.scrollViewWrap}>
           {timeZoneList.map(
@@ -130,11 +121,15 @@ const EditPillScheduleScreen = ({ navigation }: any) => {
                   {alarmData[element].map((pillElement, pillIdx) => (
                     <View style={editPillScheduleStyle.itemInfoWrap} key={pillIdx}>
                       <Image
-                        source={{ uri: pillElement.MEDICINE_IMAGE }}
+                        source={
+                          pillElement.MEDICINE_INFO.itemImage
+                            ? { uri: pillElement.MEDICINE_INFO.itemImage }
+                            : require("../assets/not_supported.png")
+                        }
                         style={[pillSearchStyle.resultImage, { width: 120, height: 65 }]}
                       />
                       <View style={editPillScheduleStyle.itemInfoLabelWrap}>
-                        <Text style={editPillScheduleStyle.itemInfoLabel}>{pillElement.MEDICINE_NAME}</Text>
+                        <Text style={editPillScheduleStyle.itemInfoLabel}>{pillElement.MEDICINE_INFO.itemName}</Text>
                         <View style={editPillScheduleStyle.itemInfoTagWarp}>
                           <View style={editPillScheduleStyle.itemInfoTag}>
                             <Text style={editPillScheduleStyle.itemInfoTagLabel}>{pillElement.NUMBER_OF_PILLS}정</Text>
@@ -153,6 +148,7 @@ const EditPillScheduleScreen = ({ navigation }: any) => {
           )}
         </ScrollView>
       ) : (
+        /* 등록된 알람이 없을 때, 안내문구 표출 */
         <View style={editPillScheduleStyle.notyetContainer}>
           <Text style={editPillScheduleStyle.notyetLabel}>아직 등록된 복용 알람이 없어요</Text>
         </View>

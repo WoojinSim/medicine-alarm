@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, View, Text, TouchableOpacity, Image, Dimensions } from "react-native";
+import { Modal, View, Text, TouchableOpacity, Image, Dimensions, Vibration } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 
 import { storeData, retrieveData, removeData } from "../components/Bookmark";
@@ -7,7 +7,7 @@ import { storeData, retrieveData, removeData } from "../components/Bookmark";
 import { generalValues } from "../styles/generalValues";
 import { pillModalStyle } from "../styles/pillModalStyle";
 import { ScrollView } from "react-native-gesture-handler";
-import { pillSearchInterface } from "../components/Bookmark";
+import { pillSearchInterface } from "../../interfaces";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -16,9 +16,11 @@ interface ChildProps {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   pillItem: pillSearchInterface;
+  selectBtn: any;
+  isSetAlarm: boolean;
 }
 
-const PillModal: React.FC<ChildProps> = ({ showModal, setShowModal, pillItem }) => {
+const PillModal: React.FC<ChildProps> = ({ showModal, setShowModal, pillItem, selectBtn, isSetAlarm }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [imgWidth, setImgWidth] = useState(240);
   const [imgHeight, setImgHeight] = useState(140);
@@ -28,10 +30,6 @@ const PillModal: React.FC<ChildProps> = ({ showModal, setShowModal, pillItem }) 
     !isBookmarked ? await storeData(pillItem) : await removeData(pillItem);
     setIsBookmarked(!isBookmarked);
     console.log("Bookmark button pressed");
-  };
-
-  const pressAlarmButton = async () => {
-    // DetailInputScreen으로 넘어가는 내용
   };
 
   // + 버튼 누를 시 이미지 크기 확대
@@ -95,9 +93,14 @@ const PillModal: React.FC<ChildProps> = ({ showModal, setShowModal, pillItem }) 
                     <Icon name="bookmark" size={30} color={generalValues.highlightColor} />
                   )}
                 </TouchableOpacity>
-                <TouchableOpacity style={pillModalStyle.alarmButton} onPress={pressAlarmButton}>
-                  <Icon name="bell" size={30} color={generalValues.highlightColor} />
-                </TouchableOpacity>
+                {isSetAlarm ? (
+                  <TouchableOpacity style={pillModalStyle.closeButton} onPress={selectBtn}>
+                    <Icon name="bell" size={30} color={generalValues.highlightColor} />
+                  </TouchableOpacity>
+                ) : (
+                  <></>
+                )}
+
                 <TouchableOpacity style={pillModalStyle.closeButton} onPress={() => setShowModal(!showModal)}>
                   <Icon name="x" size={30} color={generalValues.highlightColor} />
                 </TouchableOpacity>

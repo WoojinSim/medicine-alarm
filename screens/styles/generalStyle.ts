@@ -69,9 +69,10 @@ export const generalStyles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: "row",
-    marginBottom: generalValues.gap,
+    marginBottom: 10,
     gap: generalValues.gap,
     width: "100%",
+    flex: 1,
   },
   tmpLabel: {
     fontSize: 20,

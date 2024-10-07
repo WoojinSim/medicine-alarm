@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StatusBar, TouchableOpacity, TextInput, Vibration, Animated, Image } from "react-native";
+import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import Icon from "react-native-vector-icons/Feather";
 import IconFontAwesome from "react-native-vector-icons/FontAwesome";
@@ -11,8 +12,9 @@ import { generalValues } from "../styles/generalValues";
 import HeaderWithBack from "../components/HeaderWithBack";
 import PillListDisplay from "../components/PillListDisplay";
 import PillModal from "../components/PillModal";
-import { pillSearchInterface } from "../components/Bookmark";
 import { FlatList } from "react-native-gesture-handler";
+
+import { pillSearchInterface } from "../../interfaces";
 
 /**
  * API 응답 인터페이스
@@ -35,8 +37,10 @@ export interface DrugApiResponse {
     items: pillSearchInterface[];
   };
 }
-
 const PillSearchScreen = ({ navigation }: any) => {
+  const route = useRoute(); // 라우트 선언
+  const { isSetAlarm = false } = (route.params as { isSetAlarm: boolean }) || {};
+
   const [query, setQuery] = useState("");
   const [alert, setAlert] = useState("");
   const [alertColor, setAlertColor] = useState("red");
@@ -133,7 +137,7 @@ const PillSearchScreen = ({ navigation }: any) => {
   };
 
   /**
-   * 검색결과 랜더링 함수
+   * 검색결과 랜더링 함수 (대충 검색 아이템 컨테이너)
    * @param param0
    * @returns
    */
@@ -180,6 +184,12 @@ const PillSearchScreen = ({ navigation }: any) => {
   const backButton = () => {
     Vibration.vibrate(20);
     navigation.goBack();
+  };
+
+  const pressAlarmButton = () => {
+    // DetailInputScreen으로 넘어가는 내용
+    Vibration.vibrate(20);
+    navigation.navigate("DetailInputScreen", { selectedData });
   };
 
   // 잘 못 입력했거나 올바르지 오류상황시 애니메이션
@@ -283,12 +293,25 @@ const PillSearchScreen = ({ navigation }: any) => {
           <View style={pillSearchStyle.alertContainer}>
             <Text style={[pillSearchStyle.alertLabel, { color: alertColor }]}>{alert}</Text>
           </View>
-          <FlatList data={searchData} renderItem={renderSearchItem} keyExtractor={(item) => String(item.itemSeq)} />
+          <FlatList
+            style={pillSearchStyle.resultScrollContainer}
+            data={searchData}
+            renderItem={renderSearchItem}
+            keyExtractor={(item) => String(item.itemSeq)}
+          />
         </>
       ) : (
         <PillListDisplay setSelectedData={setSelectedData} setShowModal={setShowModal} />
       )}
-      {showModal && selectedData ? <PillModal showModal={showModal} setShowModal={setShowModal} pillItem={selectedData} /> : null}
+      {showModal && selectedData ? (
+        <PillModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          pillItem={selectedData}
+          selectBtn={pressAlarmButton}
+          isSetAlarm={isSetAlarm}
+        />
+      ) : null}
     </View>
   );
 };

@@ -5,7 +5,7 @@ export const detailInputStyle = StyleSheet.create({
   outerContainer: {
     marginHorizontal: generalValues.sidePadding,
     marginBottom: generalValues.sidePadding,
-    flexWrap: "wrap",
+    //flexWrap: "wrap",
     justifyContent: "center",
     alignItems: "flex-start",
     flex: 1,

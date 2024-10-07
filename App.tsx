@@ -10,14 +10,12 @@ import { useFonts } from "expo-font"; // 외부 글꼴 사용
 // 화면 임포트
 import MainScreen from "./screens/MainScreen";
 import FirstaidScreen from "./screens/FirstaidScreen";
-import SearchScreen from "./screens/SearchScreen";
+import SearchScreen from "./screens/AddPillSchedule/PillSearchScreen";
 import LocationScreen from "./screens/LocationScreen";
 import EditPillScheduleScreen from "./screens/EditPillScheduleScreen";
 import AddPillScheduleScreen from "./screens/AddPillSchedule/AddPillScheduleScreen";
 import PillSearchScreen from "./screens/AddPillSchedule/PillSearchScreen";
 import DetailInputScreen from "./screens/AddPillSchedule/DetailInputScreen";
-
-
 
 import { generalStyles } from "./screens/styles/generalStyle";
 import { generalValues } from "./screens/styles/generalValues";

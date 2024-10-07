@@ -3,7 +3,8 @@ import { Modal, View, Text, TouchableOpacity, Image, Dimensions } from "react-na
 import { FlatList } from "react-native-gesture-handler";
 import axios from "axios";
 
-import { pillSearchInterface, loadData } from "../components/Bookmark";
+import { loadData } from "../components/Bookmark";
+import { pillSearchInterface } from "../../interfaces";
 
 import { pillSearchStyle } from "../styles/pillSearchStyle";
 import { generalStyles } from "../styles/generalStyle";
