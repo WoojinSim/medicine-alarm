@@ -75,6 +75,7 @@ const MedicineAlarm = () => {
     return medicationDates;
   };
 
+  // 복약 계획 데이터 불러오기
   useFocusEffect(
     useCallback(() => {
       const getData = async () => {

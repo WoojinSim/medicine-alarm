@@ -56,6 +56,6 @@ export const mainStyles = StyleSheet.create({
   },
   navigationBtnSubTitle: {
     fontFamily: "NanumSquareNeoLight",
-    fontSize: 18,
+    fontSize: 15,
   },
 });

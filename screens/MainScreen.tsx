@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { View, Text, ScrollView, TouchableOpacity, Vibration, Image } from "react-native";
 
 import { generalStyles } from "./styles/generalStyle";
 import { mainStyles } from "./styles/mainStyle";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Header from "./components/Header";
 import MedicineAlarm from "./components/MedicineAlarm";
@@ -15,13 +15,12 @@ const MainScreen = ({ navigation }: any) => {
   };
 
   const pressPillSearchButton = () => {
-    // DetailInputScreen으로 넘어가는 내용
     Vibration.vibrate(20);
+    // isSetAlarm boolean 상태에 따라 검색 후 약재를 복약 계획에 추가하는 버튼 유무가 달라짐
     navigation.navigate("PillSearchScreen", { isSetAlarm: false });
   };
 
   const pressPharmacyButton = () => {
-    // DetailInputScreen으로 넘어가는 내용
     Vibration.vibrate(20);
     navigation.navigate("Location");
   };
@@ -33,7 +32,10 @@ const MainScreen = ({ navigation }: any) => {
 
       {/* 메인 화면 */}
       <ScrollView showsVerticalScrollIndicator={false} style={generalStyles.scrollViewWrap}>
+        {/* 알람 표현 영역 (메인페이지 상단부) */}
         <MedicineAlarm />
+
+        {/* 약 검색 화면 Nav 버튼 */}
         <View style={generalStyles.rowContainer}>
           <TouchableOpacity style={mainStyles.navigationBtnContainer} onPress={pressPillSearchButton}>
             <Image style={mainStyles.navigationBtnImage} source={require("../assets/Pill.png")} />
@@ -43,6 +45,8 @@ const MainScreen = ({ navigation }: any) => {
             </View>
           </TouchableOpacity>
         </View>
+
+        {/* 약 검색 화면 Nav 버튼 */}
         <View style={generalStyles.rowContainer}>
           <TouchableOpacity style={mainStyles.navigationBtnContainer} onPress={goToEditPillScheduleScreen}>
             <Image style={mainStyles.navigationBtnImage} source={require("../assets/Alarm.png")} />
@@ -52,6 +56,8 @@ const MainScreen = ({ navigation }: any) => {
             </View>
           </TouchableOpacity>
         </View>
+
+        {/* 주변 약국 화면 Nav 버튼 */}
         <View style={generalStyles.rowContainer}>
           <TouchableOpacity style={mainStyles.navigationBtnContainer} onPress={pressPharmacyButton}>
             <Image style={mainStyles.navigationBtnImage} source={require("../assets/Map.png")} />
@@ -61,48 +67,6 @@ const MainScreen = ({ navigation }: any) => {
             </View>
           </TouchableOpacity>
         </View>
-        {/* 
-                <View style={generalStyles.rowContainer}>
-          <TouchableOpacity style={mainStyles.gridContainer} onPress={goToEditPillScheduleScreen}>
-            <Text style={generalStyles.tmpLabel}>Modal Test</Text>
-          </TouchableOpacity>
-          <View style={mainStyles.gridContainer}>
-            <Text style={generalStyles.tmpLabel}>테스트 버튼2</Text>
-          </View>
-        </View>
-                <View style={generalStyles.rowContainer}>
-          <TouchableOpacity style={mainStyles.gridContainer} onPress={goToEditPillScheduleScreen}>
-            <Text style={generalStyles.tmpLabel}>Modal Test</Text>
-          </TouchableOpacity>
-          <View style={mainStyles.gridContainer}>
-            <Text style={generalStyles.tmpLabel}>테스트 버튼2</Text>
-          </View>
-        </View>
-        <View style={generalStyles.rowContainer}>
-          <View style={mainStyles.gridContainer}>
-            <Text style={generalStyles.tmpLabel}>테스트 버튼3</Text>
-          </View>
-          <View style={mainStyles.gridContainer}>
-            <Text style={generalStyles.tmpLabel}>테스트 버튼4</Text>
-          </View>
-        </View>
-        <View style={generalStyles.rowContainer}>
-          <View style={mainStyles.gridContainer}>
-            <Text style={generalStyles.tmpLabel}>테스트 버튼5</Text>
-          </View>
-          <View style={mainStyles.gridContainer}>
-            <Text style={generalStyles.tmpLabel}>테스트 버튼6</Text>
-          </View>
-        </View>
-        <View style={generalStyles.rowContainer}>
-          <View style={mainStyles.gridContainer}>
-            <Text style={generalStyles.tmpLabel}>테스트 버튼7</Text>
-          </View>
-          <View style={mainStyles.gridContainer}>
-            <Text style={generalStyles.tmpLabel}>테스트 버튼8</Text>
-          </View>
-        </View>
-        */}
       </ScrollView>
     </View>
   );

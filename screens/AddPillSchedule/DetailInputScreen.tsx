@@ -27,8 +27,15 @@ import { TIME_TYPE, pillScheduleDetailInterface, pillSearchInterface, storeObjec
 
 import HeaderWithBack from "../components/HeaderWithBack";
 
+// 사용자가 상세정보 입력하는 화면의 페이지 총 갯수 (입력 단계 총 갯수)
 const MAX_INPUT_STAGE = 5; // TODO: !!! 내용 추가시 꼭 수정할것 !!!
 
+/**
+ * 입력 화면 상단의 작은 점 (입력한 수치에 따라 몇번째 점이 활성화 될 것인지가 바뀜)
+ * @param MAX_STAGE 최대 입력 단계(페이지)
+ * @param CURRENT_STAGE 현재 입력 단계(페이지)
+ * @returns Component
+ */
 const StageIndicator = (MAX_STAGE: number, CURRENT_STAGE: number) => {
   return (
     <>
@@ -146,8 +153,6 @@ const DetailInputScreen = ({ navigation }: any) => {
       BEFORE_BED: [],
       ANYTIME: [],
     };
-    console.log("-------------------------");
-    console.log(value);
     try {
       const existingData = await AsyncStorage.getItem("@PillSchedule"); // 기존 데이터를 불러옮
       const dataArray: storeObjectType = existingData ? JSON.parse(existingData) : initDataArray; // 데이터가 쌓일 배열을 생성 (초기화)
@@ -160,6 +165,7 @@ const DetailInputScreen = ({ navigation }: any) => {
     } catch (e) {
       // 저장 오류 처리
       console.error(e);
+      // TODO: 오류 처리하는 부분 만들기
     }
   };
 

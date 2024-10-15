@@ -29,11 +29,19 @@ const EditPillScheduleScreen = ({ navigation }: any) => {
     ANYTIME: [],
   });
 
+  /**
+   * 복약 계획 추가 화면으로 이동
+   */
   const goToAddPillScheduleScreen = () => {
     Vibration.vibrate(20);
     navigation.navigate("AddPillScheduleScreen");
   };
 
+  /**
+   * 타임존 넘겨주면 한글 시간 뱉음
+   * @param timeZone TIME_TYPE | null
+   * @returns
+   */
   const timeZoneToKorean = (timeZone: TIME_TYPE | null): string[] => {
     switch (timeZone) {
       case "AFTER_BREAKFAST":
@@ -95,7 +103,6 @@ const EditPillScheduleScreen = ({ navigation }: any) => {
         bounceAnimation();
       }, 2000);
     }
-
     return () => clearInterval(bounceInterval);
   }, [translateY, alarmData]);
 
@@ -164,28 +171,3 @@ const EditPillScheduleScreen = ({ navigation }: any) => {
 };
 
 export default EditPillScheduleScreen;
-
-/*
-FIXME: 복구되거나 죽거나 둘 중 하나
-          {alarmData.map((element, idx) => (
-            <TouchableOpacity style={[editPillScheduleStyle.itemWrap, { marginTop: 10 }]} key={idx}>
-              <View style={editPillScheduleStyle.itemInfoWrap}>
-                <Image
-                  source={{ uri: element.MEDICINE_IMAGE }}
-                  style={[pillSearchStyle.resultImage, { width: 120, height: 65 }]}
-                />
-                <View style={pillSearchStyle.resultLabelWrap}>
-                  <Text style={pillSearchStyle.resultItemTitle}>{element.MEDICINE_NAME}</Text>
-                  <Text style={pillSearchStyle.resultItemLore}>{element.MEDICINE_CLASS_NAME}</Text>
-                </View>
-              </View>
-              <View style={editPillScheduleStyle.itemTimeWrap}>
-                {element.MEDICINE_TIME_ZONE?.map((timeElement, timeIdx) => (
-                  <View key={timeIdx}>
-                    <Text>{timeZoneToKorean(timeElement)[0]}</Text>
-                  </View>
-                ))}
-              </View>
-            </TouchableOpacity>
-          ))}
-*/

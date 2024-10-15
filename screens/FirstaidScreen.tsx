@@ -8,6 +8,10 @@ import FeatherIcons from "react-native-vector-icons/Feather";
 import { generalStyles } from "./styles/generalStyle";
 import { firstAidStyles } from "./styles/firstAidStyle";
 
+/*
+  시간상 싹 다 하드코딩으로 입력함
+*/
+
 const FirstaidScreen = () => {
   const [modalVisible, setModalVisible] = useState<boolean[]>(new Array(13).fill(false));
 

@@ -1,13 +1,13 @@
-/** 약 알람 시간대 별 코드 타입  */
+/**
+ * 약 알람 시간대 별 코드 타입
+ * AFTER_WAKING_UP - 7시 기상직후
+ * AFTER_BREAKFAST - 8시 조식후
+ * AFTER_LUNCH - 13시 중식후
+ * AFTER_DINNER - 18시 석식후
+ * BEFORE_BED - 22시 취침전
+ * ANYTIME - 아무때나
+ */
 export type TIME_TYPE = "AFTER_WAKING_UP" | "AFTER_BREAKFAST" | "AFTER_LUNCH" | "AFTER_DINNER" | "BEFORE_BED" | "ANYTIME";
-/*
-    AFTER_WAKING_UP - 7시 기상직후
-    AFTER_BREAKFAST - 8시 조식후
-    AFTER_LUNCH - 13시 중식후
-    AFTER_DINNER - 18시 석식후
-    BEFORE_BED - 22시 취침전
-    ANYTIME - 아무때나
-*/
 
 export interface pillSearchInterface {
   /** 회사 이름 */
