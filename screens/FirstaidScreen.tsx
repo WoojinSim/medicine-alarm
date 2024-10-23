@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Modal, Button } from "react-native";
 
 import Header from "./components/Header";
@@ -20,6 +20,10 @@ const FirstaidScreen = () => {
     array[index] = true;
     setModalVisible(array);
   };
+
+  useEffect(() => {
+    console.log(`🔵 FirstaidScreen.tsx\t\t컴포넌트 로드됨.`);
+  }, []);
 
   return (
     <View style={generalStyles.wrap}>

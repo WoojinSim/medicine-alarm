@@ -161,6 +161,7 @@ const DetailInputScreen = ({ navigation }: any) => {
         dataArray[element].push(value); // 데이터 쌓기
       });
       await AsyncStorage.setItem("@PillSchedule", JSON.stringify(dataArray)); // 저장
+      console.log(`🔵 DetailInputScreen.tsx\t\t복약 내용 성공적으로 저장됨.`);
       goToEditPillScheduleScreen();
     } catch (e) {
       // 저장 오류 처리
@@ -331,7 +332,10 @@ const DetailInputScreen = ({ navigation }: any) => {
   }, [inputStage]);
 
   useEffect(() => {
-    console.log(inputtedDetailInfo);
+    // inputtedDetailInfo.END_DATE
+    console.log(
+      `🔵 DetailInputScreen.tsx\t\t${inputtedDetailInfo.MEDICINE_CLASS_NAME} | 복약주기 ${inputtedDetailInfo.MEDICINE_INTERVALS} | 복약시간 ${inputtedDetailInfo.MEDICINE_TIME_ZONE} | 복약갯수 ${inputtedDetailInfo.NUMBER_OF_PILLS} | 복약시작 ${inputtedDetailInfo.START_DATE} | 복약시작 ${inputtedDetailInfo.END_DATE}`
+    );
     if (inputStage >= MAX_INPUT_STAGE) {
       // 모든 단계 입력 완료!
       storeData(inputtedDetailInfo);

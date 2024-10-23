@@ -42,7 +42,7 @@ const PillListDisplay: React.FC<ChildProps> = ({ setSelectedData, setShowModal }
       }}
     >
       <Image
-        source={{ uri: item.itemImage != null ? item.itemImage : "" }}
+        source={item.itemImage ? { uri: item.itemImage } : require("../../assets/not_supported.png")}
         style={[pillSearchStyle.resultImage, { width: 120, height: 65 }]}
       />
       <View style={pillSearchStyle.resultLabelWrap}>

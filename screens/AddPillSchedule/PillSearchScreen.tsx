@@ -58,6 +58,14 @@ const PillSearchScreen = ({ navigation }: any) => {
   const [selectedData, setSelectedData] = useState<pillSearchInterface>();
   const API_URL = "g7%2F%2B92eBrbF07oJ0SFsyzLTY%2BxGOvqJeeE8VUkQWvHJUi9nUxSm82jdtJLwIkuC91lVvkHvVbdCxlKFhmrp1Yg%3D%3D";
 
+  useEffect(() => {
+    console.log(`🔵 PillSearchScreen.tsx\t\t컴포넌트 로드됨. params:isSetAlarm - ${isSetAlarm}`);
+  }, []);
+
+  useEffect(() => {
+    console.log(`🔵 PillSearchScreen.tsx\t\tshowFavList 토글 ${showFavList}`);
+  }, [showFavList]);
+
   // 간단하게 자동완성 검색어가 존재하면 자동완성 출력 컨테이너 출력 State 토글
   useEffect(() => {
     if (autoCompleteData.length > 0) {
@@ -84,6 +92,7 @@ const PillSearchScreen = ({ navigation }: any) => {
       const responseRaw = await axios.get(`${apiUrl}${queryParams}`);
       const responseDate: DrugApiResponse = responseRaw.data;
       const itemNames: string[] = responseDate.body.items.map((item) => item.itemName);
+      console.log(`🔵 PillSearchScreen.tsx\t\t${itemNames}`);
       setAutoCompleteData(itemNames);
     } catch (e) {
       setAutoCompleteData([]);
@@ -132,7 +141,7 @@ const PillSearchScreen = ({ navigation }: any) => {
       return;
     }
     setIsLoading(true);
-    setAlert("");
+    console.log(`🔵 PillSearchScreen.tsx\t\t'${query}' 검색됨.`);
     setShowAutoCompleteContainer(false);
     fetchDataForSearch(query);
   };

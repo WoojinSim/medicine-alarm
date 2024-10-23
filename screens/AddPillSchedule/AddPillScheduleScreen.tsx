@@ -15,6 +15,10 @@ const AddPillScheduleScreen = ({ navigation }: any) => {
     navigation.navigate("PillSearchScreen", { isSetAlarm: true });
   };
 
+  useEffect(() => {
+    console.log(`🔵 AddPillScheduleScreen.tsx\t컴포넌트 로드됨.`);
+  }, []);
+
   return (
     <View style={generalStyles.wrap}>
       <StatusBar backgroundColor={generalValues.containerColor} barStyle="dark-content" animated={true} />

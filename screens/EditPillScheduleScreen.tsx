@@ -71,6 +71,7 @@ const EditPillScheduleScreen = ({ navigation }: any) => {
             const alarmDataList = JSON.parse(jsonAlarmData);
             setAlarmData(alarmDataList);
           }
+          console.log(`🔵 EditPillScheduleScreen.tsx\t컴포넌트 로드됨.`);
         } catch (err) {}
       };
       getData();

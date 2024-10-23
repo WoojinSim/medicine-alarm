@@ -29,7 +29,6 @@ const PillModal: React.FC<ChildProps> = ({ showModal, setShowModal, pillItem, se
   const pressBookmarkButton = async () => {
     !isBookmarked ? await storeData(pillItem) : await removeData(pillItem);
     setIsBookmarked(!isBookmarked);
-    console.log("Bookmark button pressed");
   };
 
   // + 버튼 누를 시 이미지 크기 확대

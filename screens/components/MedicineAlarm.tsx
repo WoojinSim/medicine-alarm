@@ -84,6 +84,7 @@ const MedicineAlarm = () => {
           if (jsonAlarmData) {
             const alarmDataList = JSON.parse(jsonAlarmData);
             setAlarmData(alarmDataList);
+            console.log("🔵 MedicineAlarm.tsx\t\talarmDataList 사용자지정 알람 목록 정상 로드됨.");
           }
         } catch (err) {}
       };
@@ -115,7 +116,6 @@ const MedicineAlarm = () => {
       const pillList = alarmData[timeZoneElement];
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-
       pillList.forEach((pillElement) => {
         if (new Date(pillElement.START_DATE!) <= today || new Date(pillElement.END_DATE!) >= today) {
           if (pillElement.MEDICINE_INTERVALS == 1) {

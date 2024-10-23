@@ -22,7 +22,9 @@ const storeData = async (pillItem: pillSearchInterface) => {
     let favs = await loadData();
     favs.push(pillItem);
     await AsyncStorage.setItem("favorites_pill", JSON.stringify(favs));
-    console.log("Bookmark Stored");
+    console.log(
+      `🔵 PillSearchScreen.tsx\t'${pillItem.itemSeq}|${pillItem.itemName}|${pillItem.entpName}' 북마크 정상적으로 추가됨.`
+    );
   } catch (error) {
     console.log(error);
   }
@@ -54,7 +56,9 @@ const removeData = async (pillItem: pillSearchInterface) => {
     favs.splice(idx, 1);
 
     await AsyncStorage.setItem("favorites_pill", JSON.stringify(favs));
-    console.log("Bookmark Removed");
+    console.log(
+      `🔵 PillSearchScreen.tsx\t'${pillItem.itemSeq}|${pillItem.itemName}|${pillItem.entpName}' 북마크 정상적으로 제거됨.`
+    );
   } catch (error) {
     console.log(error);
   }

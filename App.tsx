@@ -87,6 +87,8 @@ const App = () => {
     NanumSquareNeoHeavy: require("./assets/fonts/NanumSquareNeo-eHv.ttf"),
   });
 
+  console.log("🔵 App.tsx\t\t\t컴포넌트 로드됨.");
+
   // 커스텀 폰트 로드 확인
   if (!fontsLoaded) {
     return (
