@@ -32,6 +32,7 @@ const AddPillScheduleScreen = ({ navigation }: any) => {
             </TouchableOpacity>
           </View>
         </View>
+        {/* 
         <View style={[addPillScheduleStyle.itemContainer, { marginTop: generalValues.gap }]}>
           <Text style={addPillScheduleStyle.itemTitle}>건강식품</Text>
           <Text style={addPillScheduleStyle.itemSubTitle}>챙겨드시는 건강식품이 있으신가요?</Text>
@@ -42,6 +43,7 @@ const AddPillScheduleScreen = ({ navigation }: any) => {
             </TouchableOpacity>
           </View>
         </View>
+        */}
       </ScrollView>
     </View>
   );

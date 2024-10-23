@@ -255,12 +255,14 @@ const MedicineAlarm = () => {
               data={dailyAlarmData[getNextTimeZone()]}
               renderItem={renderCurrentPillList}
               keyExtractor={(item) => item.MEDICINE_INFO.itemSeq}
+              nestedScrollEnabled={true}
             />
             <Text style={medicineAlarmStyles.dailyScheduleListTitle}>내 알람</Text>
             <ScrollView
               style={medicineAlarmStyles.dailyScheduleListScrollVeiw}
               showsHorizontalScrollIndicator={false}
               horizontal={true}
+              nestedScrollEnabled={true}
             >
               <View style={medicineAlarmStyles.dailyScheduleListContainer}>
                 <View style={medicineAlarmStyles.dailyScheduleListItemContainer}>
@@ -298,9 +300,14 @@ const MedicineAlarm = () => {
             <></>
           </>
         ) : (
-          <>
-            <Text>데이터 없음</Text>
-          </>
+          <View style={medicineAlarmStyles.notAddedContainer}>
+            <Text style={medicineAlarmStyles.notAddedTitleLabel}>아직 추가된 약속이 없습니다.</Text>
+            <View style={medicineAlarmStyles.notAddedLabelContainer}>
+              <Text style={medicineAlarmStyles.notAddedSubtitleLabel}>아래의 </Text>
+              <Text style={medicineAlarmStyles.notAddedSubtitleLabelBold}>알람 설정하기</Text>
+              <Text style={medicineAlarmStyles.notAddedSubtitleLabel}> 버튼을 눌러 약속을 추가해보세요.</Text>
+            </View>
+          </View>
         )}
       </View>
     </View>

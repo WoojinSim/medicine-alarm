@@ -7,6 +7,7 @@ import { mainStyles } from "./styles/mainStyle";
 
 import Header from "./components/Header";
 import MedicineAlarm from "./components/MedicineAlarm";
+import Alarm from "./components/Alarm";
 
 const MainScreen = ({ navigation }: any) => {
   const goToEditPillScheduleScreen = () => {
@@ -31,7 +32,7 @@ const MainScreen = ({ navigation }: any) => {
       <Header title="홈" />
 
       {/* 메인 화면 */}
-      <ScrollView showsVerticalScrollIndicator={false} style={generalStyles.scrollViewWrap}>
+      <ScrollView showsVerticalScrollIndicator={false} style={generalStyles.scrollViewWrap} nestedScrollEnabled={true}>
         {/* 알람 표현 영역 (메인페이지 상단부) */}
         <MedicineAlarm />
 

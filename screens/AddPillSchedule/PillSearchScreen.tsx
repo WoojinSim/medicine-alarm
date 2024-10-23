@@ -15,6 +15,7 @@ import PillModal from "../components/PillModal";
 import { FlatList } from "react-native-gesture-handler";
 
 import { pillSearchInterface } from "../../interfaces";
+import Alarm from "../components/Alarm";
 
 /**
  * API 응답 인터페이스
@@ -216,6 +217,7 @@ const PillSearchScreen = ({ navigation }: any) => {
     ]).start();
   };
 
+  //return <Alarm />;
   return (
     <View style={generalStyles.wrap}>
       <StatusBar backgroundColor={generalValues.containerColor} barStyle="dark-content" animated={true} />

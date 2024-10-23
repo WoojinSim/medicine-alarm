@@ -1,8 +1,8 @@
 // 즐겨찾기 리스트용 약국 정보 로드
 
-import React, { useState, useEffect } from 'react';
-import * as Location from 'expo-location';
-import ChungNamParamacy from '../../../ChungNamParamacy.json';
+import React, { useState, useEffect } from "react";
+import * as Location from "expo-location";
+import ChungNamParamacy from "../../../ChungNamParamacy.json";
 
 export interface Pharmacy {
   id: string;
@@ -17,7 +17,6 @@ export interface Pharmacy {
 }
 
 export let completePharmacyData: Pharmacy[] = [];
-
 
 // 현재 날짜에 해당하는 값
 // 날짜에 따른 영업 시간 출력을 위함
@@ -34,9 +33,7 @@ const getCurrentTime = (): number => {
   return now.getHours() * 100 + now.getMinutes(); // HHMM 형식
 };
 
-
-
-export const loadPharmacyData = async (searchKeyword: string = '') => {
+export const loadPharmacyData = async (searchKeyword: string = "") => {
   /**
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
@@ -46,52 +43,50 @@ export const loadPharmacyData = async (searchKeyword: string = '') => {
     // 위치 정보는 App.tsx에서 받으므로 주석 처리, 이후 필요하면 사용 
   */
 
-    let pharmacies = ChungNamParamacy.DATA;
+  let pharmacies = ChungNamParamacy.DATA;
 
-    // 검색 키워드가 있는 경우, 키워드 검색 로직 수행
-    if (searchKeyword.trim()) {
-      pharmacies = pharmacies.filter(pharmacy =>
-          pharmacy.dutyName.includes(searchKeyword)
-      );
-    }
+  // 검색 키워드가 있는 경우, 키워드 검색 로직 수행
+  if (searchKeyword.trim()) {
+    pharmacies = pharmacies.filter((pharmacy) => pharmacy.dutyName.includes(searchKeyword));
+  }
 
-    const currentDayIndex = getCurrentDayIndex();
-    const currentTime = getCurrentTime();
+  const currentDayIndex = getCurrentDayIndex();
+  const currentTime = getCurrentTime();
 
-    const ProcessedPharmacies = pharmacies.map(pharmacy => {
-      const openKey = `dutyTime${currentDayIndex}s`;
-      const closeKey = `dutyTime${currentDayIndex}c`;
-  
-      const openTime = pharmacy[openKey] ? parseInt(pharmacy[openKey], 10) : -1;
-      const closeTime = pharmacy[closeKey] ? parseInt(pharmacy[closeKey], 10) : 2400;
-      const isOpen = openTime === -1 ? false : (currentTime >= openTime && currentTime <= closeTime);
+  const ProcessedPharmacies = pharmacies.map((pharmacy) => {
+    const openKey = `dutyTime${currentDayIndex}s`;
+    const closeKey = `dutyTime${currentDayIndex}c`;
 
-      return {
-          id: pharmacy.hpid,
-          name: pharmacy.dutyName,
-          phone: pharmacy.dutyTel1,
-          address: pharmacy.dutyAddr,
-          latitude: parseFloat(pharmacy.wgs84Lat),
-          longitude: parseFloat(pharmacy.wgs84Lon),
-          dutyopen: openTime.toString(),
-          dutyclose: closeTime.toString(),
-          isOpen,
-      };
-    }); 
+    const openTime = pharmacy[openKey] ? parseInt(pharmacy[openKey], 10) : -1;
+    const closeTime = pharmacy[closeKey] ? parseInt(pharmacy[closeKey], 10) : 2400;
+    const isOpen = openTime === -1 ? false : currentTime >= openTime && currentTime <= closeTime;
 
-    // 결과를 completePharmacyData에 저장
-    completePharmacyData.length = 0; // 이전 결과 비우기
-    completePharmacyData.push(...ProcessedPharmacies);
+    return {
+      id: pharmacy.hpid,
+      name: pharmacy.dutyName,
+      phone: pharmacy.dutyTel1,
+      address: pharmacy.dutyAddr,
+      latitude: parseFloat(pharmacy.wgs84Lat),
+      longitude: parseFloat(pharmacy.wgs84Lon),
+      dutyopen: openTime.toString(),
+      dutyclose: closeTime.toString(),
+      isOpen,
+    };
+  });
+
+  // 결과를 completePharmacyData에 저장
+  completePharmacyData.length = 0; // 이전 결과 비우기
+  completePharmacyData.push(...ProcessedPharmacies);
 };
 
 const PharInfo = () => {
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-      loadPharmacyData();
-    }, []);
-    
-return null;
+    loadPharmacyData();
+  }, []);
+
+  return null;
 };
 
 export default PharInfo;

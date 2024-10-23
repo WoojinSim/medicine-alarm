@@ -141,4 +141,27 @@ export const medicineAlarmStyles = StyleSheet.create({
     fontFamily: "NanumSquareNeoBold",
     fontSize: 12,
   },
+  notAddedContainer: {
+    paddingVertical: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  notAddedLabelContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    marginTop: 8,
+  },
+  notAddedTitleLabel: {
+    fontFamily: "NanumSquareNeoExtraBold",
+    fontSize: 30,
+  },
+  notAddedSubtitleLabel: {
+    fontFamily: "NanumSquareNeoLight",
+    fontSize: 18,
+  },
+  notAddedSubtitleLabelBold: {
+    fontFamily: "NanumSquareNeoBold",
+    fontSize: 18,
+  },
 });
