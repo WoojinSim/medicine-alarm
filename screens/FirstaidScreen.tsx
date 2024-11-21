@@ -91,7 +91,7 @@ const FirstaidScreen = () => {
           <View style={firstAidStyles.modalContainer}>
             <TouchableOpacity style={firstAidStyles.modalCloseButton} onPress={() => setModalVisible(new Array(13).fill(false))}>
               <FeatherIcons name="x" size={30} color="black" />
-            </TouchableOpacity>
+            </TouchableOpacity>CPDi
             <Text style={firstAidStyles.modalTitle}>화상 응급처치</Text>
             <ScrollView style={firstAidStyles.modalScrollView}>
               <Text style={firstAidStyles.modalTextBold}>1. 환부 식히기</Text>

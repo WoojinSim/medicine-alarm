@@ -9,13 +9,19 @@ import { useFonts } from "expo-font"; // 외부 글꼴 사용
 
 // 화면 임포트
 import MainScreen from "./screens/MainScreen";
-import FirstaidScreen from "./screens/FirstaidScreen";
+import SelfDiagnosis from "./screens/SelfDiagnosis";
 import SearchScreen from "./screens/AddPillSchedule/PillSearchScreen";
 import LocationScreen from "./screens/LocationScreen";
 import EditPillScheduleScreen from "./screens/EditPillScheduleScreen";
 import AddPillScheduleScreen from "./screens/AddPillSchedule/AddPillScheduleScreen";
 import PillSearchScreen from "./screens/AddPillSchedule/PillSearchScreen";
 import DetailInputScreen from "./screens/AddPillSchedule/DetailInputScreen";
+
+import DiagnosisDiabetes from "./screens/SelfDiagnosis/Diagnosis-diabetes";
+import DiagnosisDementia from "./screens/SelfDiagnosis/Diagnosis-dementia";
+import DiagnosisHypertension from "./screens/SelfDiagnosis/Diagnosis-hypertension";
+import DiagnosisMelancholia from "./screens/SelfDiagnosis/Diagnosis-melancholia";
+import DiagnosisOsteoporosis from "./screens/SelfDiagnosis/Diagnosis-osteoporosis";
 
 import { generalStyles } from "./screens/styles/generalStyle";
 import { generalValues } from "./screens/styles/generalValues";
@@ -47,10 +53,10 @@ const MainTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Firstaid"
-        component={FirstaidScreen}
+        name="SelfDiagnosis"
+        component={SelfDiagnosis}
         options={{
-          title: "응급처치",
+          title: "자가진단",
           tabBarIcon: ({ color, size }) => <Icon name="medical-services" color={color} size={size} />,
         }}
       />
@@ -121,6 +127,23 @@ const App = () => {
         />
         <Stack.Screen name="PillSearchScreen" component={PillSearchScreen} options={TransitionPresets.DefaultTransition} />
         <Stack.Screen name="DetailInputScreen" component={DetailInputScreen} options={TransitionPresets.DefaultTransition} />
+        <Stack.Screen name="DiagnosisDiabetes" component={DiagnosisDiabetes} options={TransitionPresets.DefaultTransition} />
+        <Stack.Screen name="DiagnosisDementia" component={DiagnosisDementia} options={TransitionPresets.DefaultTransition} />
+        <Stack.Screen
+          name="DiagnosisHypertension"
+          component={DiagnosisHypertension}
+          options={TransitionPresets.DefaultTransition}
+        />
+        <Stack.Screen
+          name="DiagnosisMelancholia"
+          component={DiagnosisMelancholia}
+          options={TransitionPresets.DefaultTransition}
+        />
+        <Stack.Screen
+          name="DiagnosisOsteoporosis"
+          component={DiagnosisOsteoporosis}
+          options={TransitionPresets.DefaultTransition}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

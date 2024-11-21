@@ -9,12 +9,13 @@
  */
 export type TIME_TYPE = "AFTER_WAKING_UP" | "AFTER_BREAKFAST" | "AFTER_LUNCH" | "AFTER_DINNER" | "BEFORE_BED" | "ANYTIME";
 
+/** 알약 데이터 인터페이스 */
 export interface pillSearchInterface {
   /** 회사 이름 */
   entpName: string;
   /** 제품 이름 */
   itemName: string;
-  /** 제품M 시퀀스 */
+  /** 제품 시퀀스 */
   itemSeq: string;
   /** 효능 및 효과 */
   efcyQesitm: string;
@@ -38,6 +39,36 @@ export interface pillSearchInterface {
   itemImage: string | null;
   /** 사업자 등록 번호 */
   bizrno: string;
+}
+
+/** 알약 데이터 백엔드 POST 요청 인터페이스 */
+export interface getPillDataRequestInterface {
+  /** 제품 시퀀스 */
+  itemSeq: string;
+}
+
+/** 알약 사진검색 백엔드 POST 요청 인터페이스 */
+export interface pillImageSearchRequestInterface {
+  /** 이미지 파일 */
+  imageFile: File;
+  /** 알약 모양 */
+  pillShape: "circle" | "ellipse" | "triangle" | "diamond" | "pentagon" | "hexagon" | "octagon" | "square" | "etc";
+}
+
+/** 알약 데이터 백엔드 POST 반환 인터페이스 */
+export interface getPillDataResponseInterface {
+  /** 알약 데이터 */
+  pillData: pillScheduleDetailInterface[];
+  /** 알약 효능 GPT 태그 */
+  gptPositiveTag: string;
+  /** 알약 부작용 GPT 태그 */
+  gptNegativeTag: string;
+  /** API 반환 코드 */
+  code: "200" | "400" | "401" | "403" | "404" | "500";
+  /** API 반환 메시지 */
+  message: string | null;
+  /** API 반환 성공 여부 */
+  success: boolean;
 }
 
 /** 약 알람 저장 인터페이스 */
