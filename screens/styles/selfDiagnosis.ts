@@ -83,4 +83,14 @@ export const selfDiagnosisStyles = StyleSheet.create({
     fontFamily: "NanumSquareNeoRegular",
     fontSize: 16,
   },
+  wipContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  wipText: {
+    fontFamily: "NanumSquareNeoExtraBold",
+    fontSize: 24,
+    opacity: 0.2,
+  },
 });
