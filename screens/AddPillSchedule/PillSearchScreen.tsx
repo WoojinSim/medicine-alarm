@@ -271,6 +271,7 @@ const PillSearchScreen = ({ navigation }: any) => {
               setSearchBoxContainerWidth(width);
             }}
           >
+            <Icon name="camera" size={28} color={generalValues.highlightColor} style={{ marginLeft: 15 }} />
             <TextInput
               placeholder="약 이름을 입력해주세요."
               style={pillSearchStyle.searchBox}

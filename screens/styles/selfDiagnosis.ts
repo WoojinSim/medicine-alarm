@@ -81,7 +81,7 @@ export const selfDiagnosisStyles = StyleSheet.create({
   },
   radioBtnText: {
     fontFamily: "NanumSquareNeoRegular",
-    fontSize: 16,
+    fontSize: 14,
   },
   wipContainer: {
     flex: 1,
@@ -92,5 +92,31 @@ export const selfDiagnosisStyles = StyleSheet.create({
     fontFamily: "NanumSquareNeoExtraBold",
     fontSize: 24,
     opacity: 0.2,
+  },
+
+  innerContentContainer: {
+    paddingHorizontal: 20,
+  },
+  innerContentTitle: {
+    fontFamily: "NanumSquareNeoExtraBold",
+    fontSize: 26,
+    margin: 20,
+    textAlign: "center",
+  },
+  innerContentSubtitle: {
+    fontFamily: "NanumSquareNeoExtraBold",
+    fontSize: 20,
+    marginBottom: 15,
+    backgroundColor: generalValues.highlightColor,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: generalValues.borderRadius,
+    color: "#FFF",
+  },
+  innerContentText: {
+    fontFamily: "NanumSquareNeoRegular",
+    fontSize: 16,
+    marginBottom: 10,
+    lineHeight: 26,
   },
 });

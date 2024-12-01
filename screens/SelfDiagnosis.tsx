@@ -43,15 +43,15 @@ const SelfDiagnosis = ({ navigation }: any) => {
         </TouchableOpacity>
         <TouchableOpacity style={selfDiagnosisStyles.itemBtn} onPress={() => goToDiagnosisPage("hypertension")}>
           <Text style={selfDiagnosisStyles.itemTitle}>고혈압 및 심혈관계 질환</Text>
-          <Text style={selfDiagnosisStyles.itemSubTitle}>고혈압 및 심혈관계 질환 자가진단</Text>
+          <Text style={selfDiagnosisStyles.itemSubTitle}>고혈압 및 심혈관계 질환 증상, 원인, 주의사항</Text>
         </TouchableOpacity>
         <TouchableOpacity style={selfDiagnosisStyles.itemBtn} onPress={() => goToDiagnosisPage("diabetes")}>
           <Text style={selfDiagnosisStyles.itemTitle}>당뇨병</Text>
-          <Text style={selfDiagnosisStyles.itemSubTitle}>당뇨병 자가진단</Text>
+          <Text style={selfDiagnosisStyles.itemSubTitle}>당뇨병 증상, 원인, 주의사항</Text>
         </TouchableOpacity>
         <TouchableOpacity style={selfDiagnosisStyles.itemBtn} onPress={() => goToDiagnosisPage("osteoporosis")}>
           <Text style={selfDiagnosisStyles.itemTitle}>골다공증</Text>
-          <Text style={selfDiagnosisStyles.itemSubTitle}>골다공증 자가진단</Text>
+          <Text style={selfDiagnosisStyles.itemSubTitle}>골다공증 증상, 원인, 주의사항</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
