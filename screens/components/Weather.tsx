@@ -64,7 +64,7 @@ const Weather: React.FC = () => {
       <View style={weatherStyle.weatherContainer}>
         <View style={weatherStyle.weatherItemContainer}>
           <Text style={weatherStyle.weatherItemTitle}>현재 기온</Text>
-          <Text style={weatherStyle.weatherItemValue}>{weatherData?.obsrValue !== "-999" ? "-4" : "-4"}℃</Text>
+          <Text style={weatherStyle.weatherItemValue}>{!weatherData ? "-4" : weatherData?.obsrValue}℃</Text>
         </View>
         <View style={weatherStyle.weatherItemContainer}>
           <Text style={weatherStyle.weatherItemTitle}>미세먼지</Text>
