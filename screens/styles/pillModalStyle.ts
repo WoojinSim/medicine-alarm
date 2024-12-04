@@ -66,7 +66,7 @@ export const pillModalStyle = StyleSheet.create({
     opacity: 0.3,
   },
   itemLoreTitle: {
-    marginTop: 20,
+    marginTop: 24,
     marginBottom: 10,
     fontFamily: "NanumSquareNeoExtraBold",
     fontSize: 18,
@@ -81,13 +81,27 @@ export const pillModalStyle = StyleSheet.create({
   },
 
   itemGptTagContainer: {
+    backgroundColor: "#F2F2F2",
+    position: "relative",
+    padding: 10,
+    borderRadius: 10,
+    gap: 4,
+    marginBottom: 20,
+  },
+  itemGptTagText: {
+    position: "absolute",
+    bottom: -12,
+    left: 0,
+    fontFamily: "NanumSquareNeoBold",
+    fontSize: 10,
+    opacity: 0.2,
+  },
+  itemGptTagRow: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "center",
-    gap: 5,
-    marginBottom: 5,
+    gap: 4,
   },
-
   itemGptTagLabel: {
     fontFamily: "NanumSquareNeoBold",
     fontSize: 16,

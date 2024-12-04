@@ -149,30 +149,33 @@ const PillModal: React.FC<ChildProps> = ({ showModal, setShowModal, pillItem, se
                 </Text>
                 <Text style={pillModalStyle.itemEntpName}>{pillItem.entpName}</Text>
                 <View style={pillModalStyle.itemGptTagContainer}>
-                  {responseData?.gptPositiveTag
-                    .split(" ")
-                    .slice(0, 4)
-                    .map((elem, index) => (
-                      <Text
-                        key={index}
-                        style={[pillModalStyle.itemGptTagLabel, { backgroundColor: generalValues.highlightColor }]}
-                      >
-                        {elem}
-                      </Text>
-                    ))}
-                </View>
-                <View style={[pillModalStyle.itemGptTagContainer, { marginBottom: 25 }]}>
-                  {responseData?.gptNegativeTag
-                    .split(" ")
-                    .slice(0, 4)
-                    .map((elem, index) => (
-                      <Text
-                        key={index}
-                        style={[pillModalStyle.itemGptTagLabel, { backgroundColor: "#e44235", color: "white" }]}
-                      >
-                        {elem}
-                      </Text>
-                    ))}
+                  <Text style={pillModalStyle.itemGptTagText}>GPT가 요약한 약의 작용들</Text>
+                  <View style={pillModalStyle.itemGptTagRow}>
+                    {responseData?.gptPositiveTag
+                      .split(" ")
+                      .slice(0, 4)
+                      .map((elem, index) => (
+                        <Text
+                          key={index}
+                          style={[pillModalStyle.itemGptTagLabel, { backgroundColor: generalValues.highlightColor }]}
+                        >
+                          {elem}
+                        </Text>
+                      ))}
+                  </View>
+                  <View style={pillModalStyle.itemGptTagRow}>
+                    {responseData?.gptNegativeTag
+                      .split(" ")
+                      .slice(0, 4)
+                      .map((elem, index) => (
+                        <Text
+                          key={index}
+                          style={[pillModalStyle.itemGptTagLabel, { backgroundColor: "#e44235", color: "white" }]}
+                        >
+                          {elem}
+                        </Text>
+                      ))}
+                  </View>
                 </View>
                 <Text style={pillModalStyle.itemLoreTitle}>세부 효능</Text>
                 <Text>{pillItem.efcyQesitm}</Text>

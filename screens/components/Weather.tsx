@@ -9,18 +9,22 @@ const CURRENT_LOCATION_X = 36;
 const CURRENT_LOCATION_Y = 127;
 
 interface WeatherData {
-  resultCode: string;
-  resultMsg: string;
   baseDate: string;
   baseTime: string;
+  khaiGrade: string;
   nx: string;
   ny: string;
-  category: string;
-  obsrValue: string;
+  pm10: string;
+  pm25: string;
+  pty: string;
+  resultCode: string;
+  resultMsg: string;
+  sidoName: string;
+  t1H: string;
 }
 
 const Weather: React.FC = () => {
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+  const [weatherData, setWeatherData] = useState<WeatherData>();
 
   const getBaseDate = (): string => {
     const today = new Date();
@@ -46,11 +50,12 @@ const Weather: React.FC = () => {
             base_time: getBaseTime(),
             nx: `${CURRENT_LOCATION_X}`,
             ny: `${CURRENT_LOCATION_Y}`,
+            sidoName: "충남",
           },
         });
-        const temperatureData = response.data.find((item: { category: string }) => item.category === "T1H");
-        if (temperatureData) {
-          setWeatherData(temperatureData);
+        console.log(response.data);
+        if (response.data) {
+          setWeatherData(response.data);
         }
       } catch (error) {
         console.error("날씨 데이터를 가져오는데 실패했습니다", error);
@@ -64,7 +69,7 @@ const Weather: React.FC = () => {
       <View style={weatherStyle.weatherContainer}>
         <View style={weatherStyle.weatherItemContainer}>
           <Text style={weatherStyle.weatherItemTitle}>현재 기온</Text>
-          <Text style={weatherStyle.weatherItemValue}>{!weatherData ? "-4" : weatherData?.obsrValue}℃</Text>
+          <Text style={weatherStyle.weatherItemValue}>{/*!weatherData ? "-4" : weatherData?.obsrValue*/}6℃</Text>
         </View>
         <View style={weatherStyle.weatherItemContainer}>
           <Text style={weatherStyle.weatherItemTitle}>미세먼지</Text>
