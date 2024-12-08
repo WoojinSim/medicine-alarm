@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StatusBar, TouchableOpacity, TextInput, Vibration, Animated, Image } from "react-native";
+import { Platform, View, Text, StatusBar, TouchableOpacity, TextInput, Vibration, Animated, Image } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import Icon from "react-native-vector-icons/Feather";
@@ -13,9 +13,12 @@ import HeaderWithBack from "../components/HeaderWithBack";
 import PillListDisplay from "../components/PillListDisplay";
 import PillModal from "../components/PillModal";
 import { FlatList } from "react-native-gesture-handler";
+import * as FileSystem from 'expo-file-system';
 
-import { pillSearchInterface } from "../../interfaces";
+import { getPillDataRequestInterface, getPillDataResponseInterface, pillSearchInterface } from "../../interfaces";
 import Alarm from "../components/Alarm";
+import ImageModal from "../components/ImageModal";
+import CameraScreen from "../components/CameraScreen";
 
 /**
  * API 응답 인터페이스
@@ -43,9 +46,13 @@ const PillSearchScreen = ({ navigation }: any) => {
   const { isSetAlarm = false } = (route.params as { isSetAlarm: boolean }) || {};
 
   const [query, setQuery] = useState("");
+  const [pillShape, setPillShape] = useState("");
+  const [searchImage, setSearchImage] = useState<string | undefined>();
   const [alert, setAlert] = useState("");
   const [alertColor, setAlertColor] = useState("red");
   const [showFavList, setShowFavList] = useState(false);
+
+  const [imageResult, setImageResult] = useState<getPillDataResponseInterface>();
 
   const [showAutoCompleteContainer, setShowAutoCompleteContainer] = useState(false);
   const [autoCompleteData, setAutoCompleteData] = useState<string[]>([]);
@@ -55,7 +62,10 @@ const PillSearchScreen = ({ navigation }: any) => {
   const [searchData, setSearchData] = useState<pillSearchInterface[]>([]);
 
   const [showModal, setShowModal] = useState(false);
+  const [showShapeList, setShowShapeList] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
   const [selectedData, setSelectedData] = useState<pillSearchInterface>();
+
   const API_URL = "g7%2F%2B92eBrbF07oJ0SFsyzLTY%2BxGOvqJeeE8VUkQWvHJUi9nUxSm82jdtJLwIkuC91lVvkHvVbdCxlKFhmrp1Yg%3D%3D";
 
   useEffect(() => {
@@ -74,6 +84,15 @@ const PillSearchScreen = ({ navigation }: any) => {
       setShowAutoCompleteContainer(false);
     }
   }, [autoCompleteData]);
+
+  useEffect(() => {
+    if (searchImage != null) {
+      fetchDataForImage(searchImage, pillShape);
+      // console.log("imageResult : " + imageResult);
+      // setSelectedData(imageResult.pillData);
+      // setShowModal(!showModal);
+    }
+  }, [searchImage]);
 
   /**
    * 검색어 자동완성만을 위한 fetchData 함수
@@ -118,6 +137,45 @@ const PillSearchScreen = ({ navigation }: any) => {
       setSearchData(responseDate.body.items);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // 서버와 통신해서 이미지 검색 결과를 가져오는 함수
+  const fetchDataForImage = async (imgURI: string, shape: string) => {
+    const formData = new FormData();
+
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+
+    const name = hours + minutes + seconds + "jpg";
+
+    console.log("uri : " + imgURI.toString());
+    console.log("pillShape: " + shape);
+    formData.append('image', {
+      uri: imgURI,
+      type: 'image/jpeg',
+      name: name,
+    });
+    formData.append('pillShape', shape);
+
+    try {
+      const response = await axios.post("http://13.125.155.126:8080/pill/search/image", formData, {
+        headers: {
+          'Content-Type' : 'multipart/form-data',
+        },
+      });
+      const responseData = (await response).data;
+      if (responseData){
+        console.log("responseData : " + JSON.stringify(responseData.pillData));
+        setImageResult(responseData);
+        setSelectedData(responseData.pillData);
+        setShowModal(!showModal);
+      }
+      
+    } catch (error) {
+      console.error("서버에서 이미지 데이터를 요청하는 데 실패했습니다.", error);
     }
   };
 
@@ -257,13 +315,13 @@ const PillSearchScreen = ({ navigation }: any) => {
               { transform: [{ translateX: shakeTranslate }], borderColor: interpolatedBorderColor },
               showAutoCompleteContainer
                 ? {
-                    borderBottomLeftRadius: 0,
-                    borderBottomRightRadius: 0,
-                    borderLeftWidth: 2,
-                    borderRightWidth: 2,
-                    borderTopWidth: 2,
-                    borderBottomWidth: 0,
-                  }
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
+                  borderLeftWidth: 2,
+                  borderRightWidth: 2,
+                  borderTopWidth: 2,
+                  borderBottomWidth: 0,
+                }
                 : null,
             ]}
             onLayout={(event) => {
@@ -271,7 +329,11 @@ const PillSearchScreen = ({ navigation }: any) => {
               setSearchBoxContainerWidth(width);
             }}
           >
-            <Icon name="camera" size={28} color={generalValues.highlightColor} style={{ marginLeft: 15 }} />
+            <TouchableOpacity onPress={async () => {
+              setShowShapeList(!showShapeList);
+            }}>
+              <Icon name="camera" size={28} color={generalValues.highlightColor} style={{ marginLeft: 15 }} />
+            </TouchableOpacity>
             <TextInput
               placeholder="약 이름을 입력해주세요."
               style={pillSearchStyle.searchBox}
@@ -322,6 +384,21 @@ const PillSearchScreen = ({ navigation }: any) => {
           pillItem={selectedData}
           selectBtn={pressAlarmButton}
           isSetAlarm={isSetAlarm}
+        />
+      ) : null}
+      {showShapeList ? (
+        <ImageModal
+          showModal={showShapeList}
+          setShowModal={setShowShapeList}
+          setPillShape={setPillShape}
+          setShowCamera={setShowCamera}
+        />
+      ) : null}
+      {showCamera ? (
+        <CameraScreen
+          setImage={setSearchImage}
+          showCamera={showCamera}
+          setShowCamera={setShowCamera}
         />
       ) : null}
     </View>

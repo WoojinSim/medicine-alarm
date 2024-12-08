@@ -58,7 +58,7 @@ export interface pillImageSearchRequestInterface {
 /** 알약 데이터 백엔드 POST 반환 인터페이스 */
 export interface getPillDataResponseInterface {
   /** 알약 데이터 */
-  pillData: pillScheduleDetailInterface[];
+  pillData: pillSearchInterface;
   /** 알약 효능 GPT 태그 */
   gptPositiveTag: string;
   /** 알약 부작용 GPT 태그 */
